@@ -1,13 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { SanityImage } from "@/components/ui/SanityImage";
-import { ThemeToggle } from "./ThemeToggle";
-import { Button } from "@/components/ui/button";
-import { RiMenu3Line, RiCloseLine, RiArrowDownSLine } from "react-icons/ri";
+import { RiMenu3Line, RiCloseLine, RiArrowDownSLine, RiPhoneLine, RiMailLine, RiMapPinLine } from "react-icons/ri";
 import { cn } from "@/lib/utils";
 
 type NavItem = {
@@ -23,13 +21,34 @@ function resolveHref(item: NavItem): string {
 
 export function Header({ settings, navigation }: { settings: any; navigation: any }) {
   const pathname = usePathname();
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const links: NavItem[] = navigation?.headerLinks || [];
 
-  // Sayfa değiştiğinde menüyü kapat
+  const isHomePage = pathname === "/";
+  const isTransparent = isHomePage && !scrolled && !drawerOpen;
+
   useEffect(() => {
-    setMenuOpen(false);
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    onScroll(); // initial check
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    setDrawerOpen(false);
   }, [pathname]);
+
+  // Body scroll lock
+  useEffect(() => {
+    document.body.style.overflow = drawerOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [drawerOpen]);
+
+  // Split links left / right around centered logo
+  const mid = Math.ceil(links.length / 2);
+  const leftLinks = links.slice(0, mid);
+  const rightLinks = links.slice(mid);
 
   const isActive = (item: NavItem) => {
     const href = resolveHref(item);
@@ -38,108 +57,228 @@ export function Header({ settings, navigation }: { settings: any; navigation: an
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto flex h-20 items-center justify-between px-4">
-        <Link href="/" className="flex items-center group h-full">
-          <div className="relative flex items-center justify-start transition-all duration-200 group-hover:scale-[1.02] active:scale-95 h-full py-4 max-w-[250px] md:max-w-[450px]">
-            {settings?.logo ? (
-              <>
-                <SanityImage
-                  image={settings.logo}
-                  width={800}
-                  height={200}
-                  fit="max"
-                  className="h-full w-auto object-contain object-left dark:hidden"
+    <>
+      <header
+        className={cn(
+          "fixed top-0 left-0 right-0 z-40 w-full transition-all duration-500",
+          isTransparent ? "bg-transparent" : "bg-[#0A0A0A]"
+        )}
+      >
+        {/* Divider — visible only in solid state */}
+        <div
+          className={cn(
+            "absolute bottom-0 left-0 right-0 h-px transition-opacity duration-500",
+            isTransparent ? "opacity-0" : "opacity-100 bg-white/10"
+          )}
+        />
+
+        <div className="site-container">
+          <div className="relative flex h-20 items-center justify-between md:justify-center">
+
+            {/* ── Desktop: Left Nav ───────────────────────────── */}
+            <nav className="hidden md:flex items-center gap-8 flex-1 justify-end pr-10">
+              {leftLinks.map((item, i) => (
+                <DesktopNavItem
+                  key={i}
+                  item={item}
+                  active={isActive(item)}
+                  isTransparent={isTransparent}
+                />
+              ))}
+            </nav>
+
+            {/* ── Logo (centered) ──────────────────────────────── */}
+            <Link href="/" className="flex-shrink-0 md:mx-10" aria-label="Ana Sayfa">
+              <div className="relative h-10 w-36 md:h-12 md:w-52">
+                <Image
+                  src="/images/logo/tuyluoglu-logo.png"
+                  alt={settings?.siteName || "Tüylüoğlu İnşaat"}
+                  fill
+                  className="object-contain object-center"
                   priority
                 />
-                <SanityImage
-                  image={settings.logo}
-                  width={800}
-                  height={200}
-                  fit="max"
-                  className="h-full w-auto object-contain object-left hidden dark:block grayscale invert opacity-90"
-                  priority
+              </div>
+            </Link>
+
+            {/* ── Desktop: Right Nav ──────────────────────────── */}
+            <nav className="hidden md:flex items-center gap-8 flex-1 pl-10">
+              {rightLinks.map((item, i) => (
+                <DesktopNavItem
+                  key={i}
+                  item={item}
+                  active={isActive(item)}
+                  isTransparent={isTransparent}
                 />
-              </>
-            ) : (
-              <span className="font-bold text-xl tracking-tight leading-none">{settings?.siteName}</span>
-            )}
+              ))}
+            </nav>
+
+            {/* ── Mobile: Hamburger ───────────────────────────── */}
+            <button
+              className="md:hidden ml-auto p-2 text-white transition-opacity hover:opacity-70"
+              onClick={() => setDrawerOpen(true)}
+              aria-label="Menüyü aç"
+            >
+              <RiMenu3Line size={22} />
+            </button>
           </div>
-        </Link>
-
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-6">
-          {links.map((item, i) => (
-            <DesktopNavItem key={i} item={item} active={isActive(item)} />
-          ))}
-          <ThemeToggle />
-        </nav>
-
-        {/* Mobile Controls */}
-        <div className="flex items-center gap-2 md:hidden">
-          <ThemeToggle />
-          <Button variant="ghost" size="icon" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menüyü aç/kapat">
-            {menuOpen ? <RiCloseLine size={20} /> : <RiMenu3Line size={20} />}
-          </Button>
         </div>
-      </div>
+      </header>
 
-      {/* Mobile Menu */}
+      {/* ── Mobile Drawer ──────────────────────────────────────── */}
       <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="border-t md:hidden overflow-hidden"
-          >
-            <nav className="container mx-auto flex flex-col gap-2 px-4 py-6">
-              {links.map((item, i) => (
-                <div key={i} className="flex flex-col gap-1">
-                  <div className="flex items-center justify-between">
-                    <Link
-                      href={resolveHref(item)}
-                      className={cn(
-                        "text-base font-medium py-2 transition-colors hover:text-primary",
-                        isActive(item) ? "text-primary" : "text-foreground"
-                      )}
-                    >
-                      {item.label}
-                    </Link>
-                  </div>
-                  {item.subLinks && (
-                    <div className="flex flex-col gap-1 pl-4 border-l ml-1 mt-1">
-                      {item.subLinks.map((sub, j) => (
+        {drawerOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              key="backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 z-[48] bg-black/50 backdrop-blur-sm md:hidden"
+              onClick={() => setDrawerOpen(false)}
+            />
+
+            {/* Drawer panel — tam ekran */}
+            <motion.div
+              key="drawer"
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 28, stiffness: 280 }}
+              className="fixed inset-0 z-[49] bg-[#0A0A0A] flex flex-col md:hidden"
+            >
+              {/* Drawer top */}
+              <div className="flex items-center justify-between px-6 py-5">
+                <div className="relative h-8 w-32">
+                  <Image
+                    src="/images/logo/tuyluoglu-logo.png"
+                    alt={settings?.siteName || "Logo"}
+                    fill
+                    className="object-contain object-left"
+                  />
+                </div>
+                <button
+                  onClick={() => setDrawerOpen(false)}
+                  className="text-white/50 hover:text-white transition-colors p-1.5"
+                  aria-label="Menüyü kapat"
+                >
+                  <RiCloseLine size={24} />
+                </button>
+              </div>
+
+              {/* Nav links — centered */}
+              <nav className="flex-1 overflow-y-auto flex flex-col items-center justify-center px-8 py-8 gap-1">
+                {links.map((item, i) => {
+                  const href = resolveHref(item);
+                  const active = isActive(item);
+
+                  // /iletisim → CTA butonu
+                  if (href === "/iletisim" || href.includes("iletisim")) {
+                    return (
+                      <div key={i} className="w-full max-w-xs mt-6">
                         <Link
-                          key={j}
-                          href={resolveHref(sub)}
-                          className={cn(
-                            "text-sm font-medium py-2 transition-colors hover:text-primary",
-                            isActive(sub) ? "text-primary" : "text-muted-foreground"
-                          )}
+                          href={href}
+                          className="block w-full text-center py-4 px-6 border border-[var(--color-accent)] text-[var(--color-accent)] font-body text-sm uppercase tracking-widest hover:bg-[var(--color-accent)] hover:text-white transition-all duration-300"
                         >
-                          {sub.label}
+                          {item.label}
                         </Link>
-                      ))}
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div key={i} className="w-full">
+                      <Link
+                        href={href}
+                        target={item.openInNewTab ? "_blank" : undefined}
+                        className={cn(
+                          "block text-center py-3.5 font-heading text-3xl transition-colors",
+                          active
+                            ? "text-[var(--color-accent)]"
+                            : "text-white/70 hover:text-white"
+                        )}
+                      >
+                        {item.label}
+                      </Link>
+                      {item.subLinks && item.subLinks.length > 0 && (
+                        <div className="flex flex-col items-center gap-1 pb-2">
+                          {item.subLinks.map((sub, j) => (
+                            <Link
+                              key={j}
+                              href={resolveHref(sub)}
+                              className="text-sm text-white/35 hover:text-white/60 transition-colors py-1"
+                            >
+                              {sub.label}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </nav>
+
+              {/* Contact info */}
+              {settings?.contactInfo && (
+                <div className="px-6 py-6 border-t border-white/10 space-y-3">
+                  <p className="text-[10px] uppercase tracking-widest text-white/30 mb-4">İletişim</p>
+                  {settings.contactInfo.phone && (
+                    <a
+                      href={`tel:${settings.contactInfo.phone}`}
+                      className="flex items-center gap-3 text-sm text-white/50 hover:text-white transition-colors"
+                    >
+                      <RiPhoneLine size={14} />
+                      <span>{settings.contactInfo.phone}</span>
+                    </a>
+                  )}
+                  {settings.contactInfo.email && (
+                    <a
+                      href={`mailto:${settings.contactInfo.email}`}
+                      className="flex items-center gap-3 text-sm text-white/50 hover:text-white transition-colors"
+                    >
+                      <RiMailLine size={14} />
+                      <span>{settings.contactInfo.email}</span>
+                    </a>
+                  )}
+                  {settings.contactInfo.address && (
+                    <div className="flex items-start gap-3 text-sm text-white/50">
+                      <RiMapPinLine size={14} className="mt-0.5 shrink-0" />
+                      <span className="leading-relaxed">{settings.contactInfo.address}</span>
                     </div>
                   )}
                 </div>
-              ))}
-            </nav>
-          </motion.div>
+              )}
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 }
 
-function DesktopNavItem({ item, active }: { item: NavItem; active: boolean }) {
+/* ── Desktop Nav Item ──────────────────────────────────────────── */
+function DesktopNavItem({
+  item,
+  active,
+  isTransparent,
+}: {
+  item: NavItem;
+  active: boolean;
+  isTransparent: boolean;
+}) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
-  // Alt menü linklerinden biri aktifse üst menüyü de aktif boyarız
-  const isSubActive = item.subLinks?.some(sub => pathname === resolveHref(sub));
+  const isSubActive = item.subLinks?.some((sub) => pathname === resolveHref(sub));
   const reallyActive = active || isSubActive;
+
+  const baseLinkCls = cn(
+    "text-[13px] tracking-[0.04em] uppercase transition-colors duration-200",
+    isTransparent
+      ? reallyActive ? "text-white font-medium" : "text-white/65 hover:text-white"
+      : reallyActive ? "text-[var(--color-accent)]" : "text-white/65 hover:text-white"
+  );
 
   if (!item.subLinks || item.subLinks.length === 0) {
     return (
@@ -147,10 +286,7 @@ function DesktopNavItem({ item, active }: { item: NavItem; active: boolean }) {
         href={resolveHref(item)}
         target={item.openInNewTab ? "_blank" : undefined}
         rel={item.openInNewTab ? "noopener noreferrer" : undefined}
-        className={cn(
-          "text-sm font-medium transition-colors hover:text-primary",
-          reallyActive ? "text-primary font-semibold" : "text-foreground/70"
-        )}
+        className={baseLinkCls}
       >
         {item.label}
       </Link>
@@ -158,34 +294,31 @@ function DesktopNavItem({ item, active }: { item: NavItem; active: boolean }) {
   }
 
   return (
-    <div 
-      className="relative group"
+    <div
+      className="relative"
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >
       <Link
         href={resolveHref(item)}
-        className={cn(
-          "flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary",
-          reallyActive ? "text-primary font-semibold" : "text-foreground/70"
-        )}
+        className={cn(baseLinkCls, "flex items-center gap-1")}
       >
         {item.label}
         <motion.span animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
-          <RiArrowDownSLine size={16} />
+          <RiArrowDownSLine size={14} />
         </motion.span>
       </Link>
-      
+
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            transition={{ duration: 0.2 }}
-            className="absolute left-0 top-full pt-4 min-w-[200px]"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.15 }}
+            className="absolute left-1/2 -translate-x-1/2 top-full pt-3 min-w-[180px]"
           >
-            <div className="bg-popover border rounded-xl shadow-xl p-2 overflow-hidden">
+            <div className="bg-[#111111] border border-white/10 rounded-lg p-1.5 shadow-2xl">
               {item.subLinks.map((sub, j) => {
                 const subActive = pathname === resolveHref(sub);
                 return (
@@ -193,10 +326,11 @@ function DesktopNavItem({ item, active }: { item: NavItem; active: boolean }) {
                     key={j}
                     href={resolveHref(sub)}
                     target={sub.openInNewTab ? "_blank" : undefined}
-                    rel={sub.openInNewTab ? "noopener noreferrer" : undefined}
                     className={cn(
-                      "flex items-center px-4 py-2.5 text-sm font-medium rounded-lg hover:bg-muted transition-colors",
-                      subActive ? "text-primary bg-primary/5" : "text-foreground/70"
+                      "block px-4 py-2.5 text-[13px] rounded-md transition-colors",
+                      subActive
+                        ? "text-[var(--color-accent)] bg-white/5"
+                        : "text-white/60 hover:text-white hover:bg-white/5"
                     )}
                   >
                     {sub.label}

@@ -106,14 +106,18 @@ export const serviceBySlugQuery = groq`*[_type == "service" && slug.current == $
 
 // ─── Projeler ──────────────────────────────────────────────────────────────────
 
-export const projectListQuery = groq`*[_type == "project"] | order(_createdAt asc) {
-  title, slug,
+export const projectListQuery = groq`*[_type == "project"] | order(_createdAt desc) {
+  title, slug, category, location, year, excerpt,
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
 }`;
 
 export const projectBySlugQuery = groq`*[_type == "project" && slug.current == $slug][0] {
-  title, slug,
+  title, slug, category, location, year, excerpt,
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
+  gallery[] {
+    asset->{ _id, url, metadata { lqip, dimensions } },
+    alt, hotspot, crop
+  },
   body[] {
     ...,
     _type == "image" => { asset->{ _id, url, metadata { lqip, dimensions } }, alt, alignment, size, hotspot, crop }
@@ -131,10 +135,7 @@ export const legalPageBySlugQuery = groq`*[_type == "legalPage" && slug.current 
 
 export const allSlugsForSitemapQuery = groq`{
   "blogPosts": *[_type == "blogPost" && defined(slug.current)] { "slug": slug.current, _updatedAt },
-  "blogCategories": *[_type == "blogCategory" && defined(slug.current)] { "slug": slug.current, _updatedAt },
-  "services": *[_type == "service" && defined(slug.current)] { "slug": slug.current, _updatedAt },
-  "projects": *[_type == "project" && defined(slug.current)] { "slug": slug.current, _updatedAt },
-  "legalPages": *[_type == "legalPage" && defined(slug.current)] { "slug": slug.current, _updatedAt }
+  "projects": *[_type == "project" && defined(slug.current)] { "slug": slug.current, _updatedAt }
 }`;
 
 // ─── Varsayılan SEO ────────────────────────────────────────────────────────────
