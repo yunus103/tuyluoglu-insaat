@@ -64,7 +64,7 @@ export function ServicesSection({ data }: ServicesSectionProps) {
   }, [activeTab, activeServices, data?.insaatTabImage, data?.mimarlikTabImage]);
 
   return (
-    <section className="bg-[#0C0C0C] relative overflow-hidden">
+    <section className="bg-[#0C0C0C] texture-diagonal relative overflow-hidden">
       <div ref={ref} className="site-container py-24 md:py-32 lg:py-40">
 
         {/* ── Section header + tabs ─────────────────────────── */}

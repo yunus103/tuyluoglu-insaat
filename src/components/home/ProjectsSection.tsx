@@ -41,7 +41,7 @@ function ProjectCard({
       <Link href={`/projeler/${project.slug?.current ?? ""}`} className="block w-full h-full">
 
         {/* ── Full-bleed image ─────────────────────────────── */}
-        <div className="absolute inset-0 bg-[var(--color-surface)]">
+        <div className="absolute inset-0 bg-white/[0.03]">
           {imgUrl ? (
             <Image
               src={imgUrl}
@@ -52,7 +52,7 @@ function ProjectCard({
               priority={priority}
             />
           ) : (
-            <div className="absolute inset-0 flex items-center justify-center text-[var(--color-muted)] text-sm">
+            <div className="absolute inset-0 flex items-center justify-center text-white/20 text-sm">
               Görsel Eklenmedi
             </div>
           )}
@@ -99,7 +99,7 @@ export function ProjectsSection({ data }: ProjectsSectionProps) {
   const line2 = words.slice(Math.ceil(words.length / 2)).join(" ");
 
   return (
-    <section className="bg-white overflow-hidden">
+    <section className="bg-[#111111] overflow-hidden">
       <div ref={ref} className="site-container py-20 md:py-28 lg:py-36">
 
         {/* ── Header row: title left, pill button right ───────── */}
@@ -111,11 +111,11 @@ export function ProjectsSection({ data }: ProjectsSectionProps) {
             className="shrink-0"
           >
             <h2
-              className="font-heading text-[var(--color-black)] leading-[0.92]"
+              className="font-heading text-white leading-[0.92]"
               style={{ fontSize: "clamp(2.75rem, 6vw, 5rem)" }}
             >
               <span className="block">{line1}</span>
-              {line2 && <span className="block italic">{line2}</span>}
+              {line2 && <span className="block italic text-white/70">{line2}</span>}
             </h2>
           </motion.div>
 
@@ -127,12 +127,12 @@ export function ProjectsSection({ data }: ProjectsSectionProps) {
           >
             <Link
               href="/projeler"
-              className="group inline-flex items-center gap-0 border border-[var(--color-black)] rounded-full overflow-hidden text-[11px] uppercase tracking-[0.15em] hover:bg-[var(--color-black)] transition-colors duration-300"
+              className="group inline-flex items-center gap-0 border border-white/30 rounded-full overflow-hidden text-[11px] uppercase tracking-[0.15em] hover:bg-white transition-colors duration-300"
             >
-              <span className="pl-7 pr-3 py-3.5 text-[var(--color-black)] group-hover:text-white transition-colors duration-300">
+              <span className="pl-7 pr-3 py-3.5 text-white group-hover:text-[var(--color-black)] transition-colors duration-300">
                 Tümünü Gör
               </span>
-              <span className="flex items-center justify-center w-10 h-10 bg-[var(--color-black)] text-white rounded-full mr-1 group-hover:bg-white group-hover:text-[var(--color-black)] transition-colors duration-300">
+              <span className="flex items-center justify-center w-10 h-10 bg-white text-[var(--color-black)] rounded-full mr-1 group-hover:bg-[var(--color-black)] group-hover:text-white transition-colors duration-300">
                 <RiArrowRightLine size={15} />
               </span>
             </Link>
@@ -141,8 +141,8 @@ export function ProjectsSection({ data }: ProjectsSectionProps) {
 
         {/* ── Project grid ──────────────────────────────────────── */}
         {projects.length === 0 ? (
-          <div className="text-center py-20 text-[var(--color-muted)] text-sm">
-            Henüz proje eklenmemiş. Sanity Studio'dan proje ekleyebilirsiniz.
+          <div className="text-center py-20 text-white/30 text-sm">
+            Henüz proje eklenmemiş. Sanity Studio&apos;dan proje ekleyebilirsiniz.
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">

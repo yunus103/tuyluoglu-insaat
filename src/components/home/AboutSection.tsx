@@ -46,7 +46,7 @@ export function AboutSection({ data }: AboutSectionProps) {
             initial={{ opacity: 0 }}
             animate={inView ? { opacity: 1 } : {}}
             transition={{ duration: 1 }}
-            className="lg:col-span-7 relative"
+            className="lg:col-span-7 relative corner-accent"
           >
             <div className="relative aspect-[3/4] sm:aspect-[4/5] lg:aspect-auto lg:h-[600px] overflow-hidden bg-[var(--color-surface)]">
               {imageUrl ? (

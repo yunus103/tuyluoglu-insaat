@@ -18,15 +18,16 @@ interface HeroSectionProps {
 
 export function HeroSection({ data }: HeroSectionProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoLoaded, setVideoLoaded] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
   const ctaLabel = data?.heroCtaLabel || "Projelerimizi İnceleyin";
   const ctaLink  = data?.heroCtaLink  || "/projeler";
 
+  // Poster URL — slightly lower quality for faster initial paint
   const posterUrl = data?.heroPosterImage?.asset?.url
-    ? urlForImage(data.heroPosterImage)?.width(1920).quality(80).url() ?? undefined
+    ? urlForImage(data.heroPosterImage)?.width(1600).quality(70).url() ?? undefined
     : undefined;
 
-  // Ensure muted autoplay on all browsers
+  // Ensure muted autoplay on all browsers (especially iOS Safari)
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -37,7 +38,7 @@ export function HeroSection({ data }: HeroSectionProps) {
   return (
     <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
 
-      {/* ── Background: video or poster ───────────────────────── */}
+      {/* ── Background: poster only (no video URL) ─────────────── */}
       {posterUrl && !data?.heroVideoUrl && (
         <div className="absolute inset-0">
           <Image
@@ -51,26 +52,39 @@ export function HeroSection({ data }: HeroSectionProps) {
         </div>
       )}
 
+      {/* ── Video element ──────────────────────────────────────── */}
       {data?.heroVideoUrl && (
         <video
           ref={videoRef}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${videoLoaded ? "opacity-100" : "opacity-0"}`}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${videoReady ? "opacity-100" : "opacity-0"}`}
           autoPlay
           muted
           loop
           playsInline
           preload="auto"
-          poster={posterUrl}
-          onCanPlayThrough={() => setVideoLoaded(true)}
+          /* poster attribute intentionally omitted — 
+             the <Image> overlay below handles it with responsive sizing,
+             avoiding a redundant full-size download */
+          // @ts-expect-error — fetchPriority is valid HTML but not yet in React types
+          fetchPriority="high"
+          onCanPlay={() => setVideoReady(true)}
         >
           <source src={data.heroVideoUrl} type="video/mp4" />
         </video>
       )}
 
-      {/* Show poster while video is loading */}
-      {data?.heroVideoUrl && posterUrl && !videoLoaded && (
+      {/* ── Poster overlay while video buffers ─────────────────── */}
+      {data?.heroVideoUrl && posterUrl && !videoReady && (
         <div className="absolute inset-0">
-          <Image src={posterUrl} alt="Hero background" fill className="object-cover" priority quality={85} />
+          <Image
+            src={posterUrl}
+            alt="Hero background"
+            fill
+            className="object-cover"
+            priority
+            quality={85}
+            sizes="100vw"
+          />
         </div>
       )}
 

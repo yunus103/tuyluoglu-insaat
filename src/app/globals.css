@@ -213,4 +213,50 @@
     padding-left: 1.5rem;
     padding-right: 1.5rem;
   }
+
+  /* ── Section Textures ────────────────────────────── */
+
+  /* Blueprint grid — light sections (WhyUs) */
+  .texture-blueprint {
+    background-image:
+      linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+
+  /* Diagonal hatching — dark sections (Services) */
+  .texture-diagonal {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 30px,
+      rgba(255,255,255,0.018) 30px,
+      rgba(255,255,255,0.018) 31px
+    );
+  }
+
+  /* Corner accent marks — architectural detail */
+  .corner-accent::before,
+  .corner-accent::after {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .corner-accent::before {
+    top: -1px;
+    right: -1px;
+    border-top: 2px solid var(--color-accent);
+    border-right: 2px solid var(--color-accent);
+    opacity: 0.3;
+  }
+  .corner-accent::after {
+    bottom: -1px;
+    left: -1px;
+    border-bottom: 2px solid var(--color-accent);
+    border-left: 2px solid var(--color-accent);
+    opacity: 0.3;
+  }
 }
