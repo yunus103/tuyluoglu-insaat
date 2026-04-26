@@ -1,72 +1,131 @@
-import { FadeIn } from "@/components/ui/FadeIn";
-import { SanityImage } from "@/components/ui/SanityImage";
-import { Button } from "@/components/ui/button";
+"use client";
+
+import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { RiArrowDownLine } from "react-icons/ri";
+import { urlForImage } from "@/sanity/lib/image";
 
 interface HeroSectionProps {
   data: {
-    heroImage?: any;
-    heroTitle?: string;
-    heroSubtitle?: string;
+    heroVideoUrl?: string;
+    heroPosterImage?: any;
     heroCtaLabel?: string;
-    heroCtaLink?: any;
-  };
-}
-
-export function resolveLink(linkData: any) {
-  if (!linkData) return "/";
-  if (linkData.linkType === "manual") return linkData.manual || "/";
-  
-  const ref = linkData.internal;
-  if (!ref || !ref._type) return "/";
-  
-  switch (ref._type) {
-    case "service": return `/hizmetler/${ref.slug}`;
-    case "project": return `/projeler/${ref.slug}`;
-    case "blogPost": return `/${ref.slug}`;
-    case "legalPage": return `/yasal/${ref.slug}`;
-    case "aboutPage": return `/hakkimizda`;
-    case "contactPage": return `/iletisim`;
-    default: return "/";
-  }
+    heroCtaLink?: string;
+  } | null;
 }
 
 export function HeroSection({ data }: HeroSectionProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const ctaLabel = data?.heroCtaLabel || "Projelerimizi İnceleyin";
+  const ctaLink  = data?.heroCtaLink  || "/projeler";
+
+  const posterUrl = data?.heroPosterImage?.asset?.url
+    ? urlForImage(data.heroPosterImage)?.width(1920).quality(80).url() ?? undefined
+    : undefined;
+
+  // Ensure muted autoplay on all browsers
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = true;
+    video.play().catch(() => {/* autoplay blocked — poster stays visible */});
+  }, []);
+
   return (
-    <section className="relative min-h-[80vh] flex items-center">
-      {data?.heroImage && (
-        <div className="absolute inset-0 z-0">
-          <SanityImage
-            image={data.heroImage}
+    <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
+
+      {/* ── Background: video or poster ───────────────────────── */}
+      {posterUrl && !data?.heroVideoUrl && (
+        <div className="absolute inset-0">
+          <Image
+            src={posterUrl}
+            alt="Hero background"
             fill
-            sizes="100vw"
-            quality={90}
             className="object-cover"
             priority
+            quality={85}
           />
-          <div className="absolute inset-0 bg-black/50" />
         </div>
       )}
 
-      <div className="relative z-10 container mx-auto px-4 py-24">
-        <FadeIn direction="up" duration={0.7}>
-          {data?.heroTitle && (
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 max-w-3xl">
-              {data.heroTitle}
-            </h1>
-          )}
-          {data?.heroSubtitle && (
-            <p className="text-lg md:text-xl text-white/80 mb-8 max-w-2xl">
-              {data.heroSubtitle}
-            </p>
-          )}
-          {data?.heroCtaLabel && data?.heroCtaLink && (
-            <Button size="lg" render={<Link href={resolveLink(data.heroCtaLink)} />}>
-              {data.heroCtaLabel}
-            </Button>
-          )}
-        </FadeIn>
+      {data?.heroVideoUrl && (
+        <video
+          ref={videoRef}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${videoLoaded ? "opacity-100" : "opacity-0"}`}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          poster={posterUrl}
+          onCanPlayThrough={() => setVideoLoaded(true)}
+        >
+          <source src={data.heroVideoUrl} type="video/mp4" />
+        </video>
+      )}
+
+      {/* Show poster while video is loading */}
+      {data?.heroVideoUrl && posterUrl && !videoLoaded && (
+        <div className="absolute inset-0">
+          <Image src={posterUrl} alt="Hero background" fill className="object-cover" priority quality={85} />
+        </div>
+      )}
+
+      {/* ── Overlay gradient ──────────────────────────────────── */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/45 to-black/65 z-10" />
+
+      {/* ── Center content ────────────────────────────────────── */}
+      <div className="relative z-20 flex flex-col items-center justify-center text-center px-6">
+        {/* Logo */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: "easeOut" }}
+          className="mb-10"
+        >
+          <Image
+            src="/images/logo/tuyluoglu-logo.png"
+            alt="Tüylüoğlu İnşaat"
+            width={320}
+            height={96}
+            className="w-64 md:w-[22rem] h-auto object-contain"
+            priority
+          />
+        </motion.div>
+
+        {/* CTA Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.3, ease: "easeOut" }}
+        >
+          <Link
+            href={ctaLink}
+            className="inline-block px-10 py-3.5 border border-white text-white text-[11px] tracking-[0.2em] uppercase font-body transition-all duration-300 hover:bg-white hover:text-[var(--color-black)]"
+          >
+            {ctaLabel}
+          </Link>
+        </motion.div>
       </div>
+
+      {/* ── Scroll indicator ──────────────────────────────────── */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2, duration: 0.8 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2"
+      >
+        <span className="text-white/40 text-[9px] tracking-[0.3em] uppercase">Kaydır</span>
+        <motion.div
+          animate={{ y: [0, 6, 0] }}
+          transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
+        >
+          <RiArrowDownLine size={16} className="text-white/40" />
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

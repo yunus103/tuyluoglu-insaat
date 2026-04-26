@@ -6,6 +6,21 @@ export const serviceType = defineType({
   type: "document",
   fields: [
     defineField({ name: "title", title: "Başlık", type: "string", validation: (Rule) => Rule.required() }),
+    defineField({ name: "excerpt", title: "Kısa Açıklama", type: "text", rows: 2, description: "Ana sayfada hizmet adının altında görünür. 1-2 cümle yeterli." }),
+    defineField({
+      name: "serviceCategory",
+      title: "Hizmet Kategorisi",
+      type: "string",
+      options: {
+        list: [
+          { title: "İnşaat", value: "insaat" },
+          { title: "Mimarlık", value: "mimarlik" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "insaat",
+      description: "Ana sayfada hizmetlerin hangi tab altında gösterileceğini belirler.",
+    }),
     defineField({ name: "slug", title: "Slug", type: "slug", options: { source: "title" }, validation: (Rule) => Rule.required() }),
     defineField({
       name: "mainImage",

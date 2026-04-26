@@ -21,14 +21,41 @@ export const layoutQuery = groq`{
 // ─── Sayfalar ──────────────────────────────────────────────────────────────────
 
 export const homePageQuery = groq`*[_type == "homePage"][0] {
-  heroTitle, heroSubtitle, heroCtaLabel,
-  heroCtaLink {
-    linkType,
-    manual,
-    internal->{ _type, "slug": slug.current }
+  // Hero
+  heroVideoUrl,
+  heroPosterImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
+  heroCtaLabel,
+  heroCtaLink,
+
+  // Hakkımızda
+  aboutTitle, aboutText,
+  aboutImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
+  stats[] { value, label },
+
+  // Hizmetler
+  servicesTitle,
+  featuredServices[]->{
+    _id, title, excerpt, serviceCategory, slug,
+    mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
   },
-  heroImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
-  seo
+
+  // Neden Biz
+  whyUsTitle,
+  whyUsItems[] { title, description },
+
+  // Projeler
+  projectsTitle,
+
+  // CTA
+  ctaTitle, ctaSubtitle, ctaButtonLabel,
+
+  seo,
+
+  // İlgili içerikler — ayrı sorgu yerine burada çek
+  "featuredProjects": *[_type == "project"] | order(_createdAt desc)[0...6] {
+    title, slug,
+    mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
+  }
 }`;
 
 export const aboutPageQuery = groq`*[_type == "aboutPage"][0] {

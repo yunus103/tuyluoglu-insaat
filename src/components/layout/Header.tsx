@@ -89,7 +89,7 @@ export function Header({ settings, navigation }: { settings: any; navigation: an
 
             {/* ── Logo (centered) ──────────────────────────────── */}
             <Link href="/" className="flex-shrink-0 md:mx-10" aria-label="Ana Sayfa">
-              <div className="relative h-10 w-36 md:h-12 md:w-52">
+              <div className="relative h-10 w-36 md:h-14 md:w-56">
                 <Image
                   src="/images/logo/tuyluoglu-logo.png"
                   alt={settings?.siteName || "Tüylüoğlu İnşaat"}
