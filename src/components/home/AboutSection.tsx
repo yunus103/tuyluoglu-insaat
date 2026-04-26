@@ -35,7 +35,7 @@ export function AboutSection({ data }: AboutSectionProps) {
     : null;
 
   return (
-    <section className="bg-[var(--color-bg)]">
+    <section className="bg-white">
       <div ref={ref} className="site-container py-24 md:py-32 lg:py-40">
 
         {/* ── Main content grid ──────────────────────────────── */}

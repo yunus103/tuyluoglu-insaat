@@ -94,6 +94,22 @@ export const homePageType = defineType({
       of: [{ type: "reference", to: [{ type: "service" }] }],
       description: "Ana sayfada gösterilecek hizmetleri seçin. Sıraya göre listelenir.",
     }),
+    defineField({
+      name: "insaatTabImage",
+      title: "İnşaat Tab Görseli",
+      type: "image",
+      options: { hotspot: true },
+      fields: [defineField({ name: "alt", title: "Alt Metni", type: "string" })],
+      description: "Hizmetler bölümünde İnşaat tabı açıkken sol panelde görünecek fotoğraf. Önerilen: dikey, 900×1100px.",
+    }),
+    defineField({
+      name: "mimarlikTabImage",
+      title: "Mimarlık Tab Görseli",
+      type: "image",
+      options: { hotspot: true },
+      fields: [defineField({ name: "alt", title: "Alt Metni", type: "string" })],
+      description: "Hizmetler bölümünde Mimarlık tabı açıkken sol panelde görünecek fotoğraf. Önerilen: dikey, 900×1100px.",
+    }),
 
     // ─── Neden Biz Section ────────────────────────────────────
     defineField({

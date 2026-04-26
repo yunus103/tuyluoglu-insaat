@@ -25,7 +25,7 @@ export function WhyUsSection({ data }: WhyUsSectionProps) {
   const items = data?.whyUsItems?.length ? data.whyUsItems : FALLBACK_ITEMS;
 
   return (
-    <section className="bg-white">
+    <section className="bg-[#F4F4F2]">
       <div ref={ref} className="site-container py-24 md:py-32">
 
         {/* Header */}

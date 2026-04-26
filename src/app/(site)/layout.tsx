@@ -24,7 +24,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       )}
       <JsonLd data={organizationJsonLd(data?.settings)} />
       <Header settings={data?.settings} navigation={data?.navigation} />
-      <main>
+      <main className="overflow-x-hidden">
         <HeaderSpacer />
         {children}
       </main>

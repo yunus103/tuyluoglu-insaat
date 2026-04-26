@@ -91,7 +91,7 @@ export function HeroSection({ data }: HeroSectionProps) {
             alt="Tüylüoğlu İnşaat"
             width={320}
             height={96}
-            className="w-64 md:w-[22rem] h-auto object-contain"
+            className="w-72 md:w-[26rem] h-auto object-contain"
             priority
           />
         </motion.div>

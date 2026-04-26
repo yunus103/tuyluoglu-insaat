@@ -38,6 +38,8 @@ export const homePageQuery = groq`*[_type == "homePage"][0] {
     _id, title, excerpt, serviceCategory, slug,
     mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
   },
+  insaatTabImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
+  mimarlikTabImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
 
   // Neden Biz
   whyUsTitle,

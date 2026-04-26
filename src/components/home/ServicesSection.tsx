@@ -29,6 +29,8 @@ interface ServicesSectionProps {
   data: {
     servicesTitle?: string;
     featuredServices?: any[];
+    insaatTabImage?: any;
+    mimarlikTabImage?: any;
   } | null;
 }
 
@@ -49,12 +51,17 @@ export function ServicesSection({ data }: ServicesSectionProps) {
 
   const activeServices = (grouped[activeTab].length ? grouped[activeTab] : (activeTab === "insaat" ? FALLBACK_INSAAT : FALLBACK_MIMARLIK));
 
-  // Get representative image for active tab — first service that has an image
+  // Resolve representative image: tab-specific first, then fallback to first service image
   const representativeImg = useMemo(() => {
+    const tabImg = activeTab === "insaat" ? data?.insaatTabImage : data?.mimarlikTabImage;
+    if (tabImg?.asset?.url) {
+      return urlForImage(tabImg)?.width(900).height(1100).quality(80).url() ?? null;
+    }
+    // Fallback: first service in active tab that has an image
     const withImg = activeServices.find((s: any) => s.mainImage?.asset?.url);
     if (!withImg) return null;
     return urlForImage(withImg.mainImage)?.width(900).height(1100).quality(80).url() ?? null;
-  }, [activeServices]);
+  }, [activeTab, activeServices, data?.insaatTabImage, data?.mimarlikTabImage]);
 
   return (
     <section className="bg-[#0C0C0C] relative overflow-hidden">

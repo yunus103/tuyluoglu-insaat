@@ -76,7 +76,7 @@ export function Header({ settings, navigation }: { settings: any; navigation: an
           <div className="relative flex h-20 items-center justify-between md:justify-center">
 
             {/* ── Desktop: Left Nav ───────────────────────────── */}
-            <nav className="hidden md:flex items-center gap-8 flex-1 justify-end pr-10">
+            <nav className="hidden md:flex items-center gap-5 lg:gap-7 flex-1 justify-end pr-8 lg:pr-12">
               {leftLinks.map((item, i) => (
                 <DesktopNavItem
                   key={i}
@@ -88,8 +88,8 @@ export function Header({ settings, navigation }: { settings: any; navigation: an
             </nav>
 
             {/* ── Logo (centered) ──────────────────────────────── */}
-            <Link href="/" className="flex-shrink-0 md:mx-10" aria-label="Ana Sayfa">
-              <div className="relative h-10 w-36 md:h-14 md:w-56">
+            <Link href="/" className="flex-shrink-0 md:mx-6 lg:mx-10" aria-label="Ana Sayfa">
+              <div className="relative h-10 w-36 md:h-16 md:w-64 lg:h-16 lg:w-72">
                 <Image
                   src="/images/logo/tuyluoglu-logo.png"
                   alt={settings?.siteName || "Tüylüoğlu İnşaat"}
@@ -101,7 +101,7 @@ export function Header({ settings, navigation }: { settings: any; navigation: an
             </Link>
 
             {/* ── Desktop: Right Nav ──────────────────────────── */}
-            <nav className="hidden md:flex items-center gap-8 flex-1 pl-10">
+            <nav className="hidden md:flex items-center gap-5 lg:gap-7 flex-1 pl-8 lg:pl-12">
               {rightLinks.map((item, i) => (
                 <DesktopNavItem
                   key={i}
@@ -274,7 +274,7 @@ function DesktopNavItem({
   const reallyActive = active || isSubActive;
 
   const baseLinkCls = cn(
-    "text-[13px] tracking-[0.04em] uppercase transition-colors duration-200",
+    "text-[12px] lg:text-[13px] tracking-[0.04em] uppercase transition-colors duration-200 whitespace-nowrap",
     isTransparent
       ? reallyActive ? "text-white font-medium" : "text-white/65 hover:text-white"
       : reallyActive ? "text-[var(--color-accent)]" : "text-white/65 hover:text-white"
