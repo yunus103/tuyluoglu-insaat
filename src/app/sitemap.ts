@@ -17,9 +17,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   const dynamicRoutes: MetadataRoute.Sitemap = [
-    // Blog yazıları
+    // Blog yazıları — /[slug] altında (ön ek yok)
     ...(data?.blogPosts?.map((p: any) => ({
-      url: `${base}/blog/${p.slug}`,
+      url: `${base}/${p.slug}`,
       lastModified: new Date(p._updatedAt),
       changeFrequency: "monthly" as const,
       priority: 0.6,
@@ -29,6 +29,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...(data?.projects?.map((p: any) => ({
       url: `${base}/projeler/${p.slug}`,
       lastModified: new Date(p._updatedAt),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })) || []),
+
+    // Hizmet detay sayfaları
+    ...(data?.services?.map((s: any) => ({
+      url: `${base}/hizmetler/${s.slug}`,
+      lastModified: new Date(s._updatedAt),
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })) || []),

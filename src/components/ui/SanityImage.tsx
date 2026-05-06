@@ -108,6 +108,7 @@ export function SanityImage({
       sizes={sizes}
       className={className}
       priority={priority}
+      quality={quality}
       style={{
         objectFit: resolvedObjectFit,
         objectPosition,

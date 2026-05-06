@@ -5,10 +5,12 @@ export const servicesPageType = defineType({
   title: "Hizmetler Sayfası",
   type: "document",
   fields: [
-    defineField({ name: "pageTitle", title: "Sayfa Başlığı", type: "string" }),
-    defineField({ name: "pageSubtitle", title: "Alt Başlık / Kısa Yazı", type: "text", rows: 3 }),
-    defineField({ name: "ctaLabel", title: "CTA Buton Metni", type: "string", description: "Boş bırakılırsa CTA butonu gizlenir" }),
-    defineField({ name: "ctaLink", title: "CTA Buton Linki", type: "string" }),
-    defineField({ name: "seo", title: "SEO", type: "seo" }),
+    defineField({ name: "heroTitle",    title: "Hero Başlığı",        type: "string", initialValue: "Hizmetlerimiz" }),
+    defineField({ name: "heroSubtitle", title: "Hero Alt Açıklaması", type: "text",   rows: 2, initialValue: "İnşaat ve mimarlık alanında kapsamlı çözümler sunuyoruz." }),
+    defineField({ name: "pageTitle",    title: "SEO Sayfa Başlığı (meta)", type: "string" }),
+    defineField({ name: "pageSubtitle", title: "SEO Meta Açıklaması",      type: "text", rows: 3 }),
+    defineField({ name: "ctaLabel",     title: "CTA Buton Metni",          type: "string", description: "Boş bırakılırsa CTA butonu gizlenir" }),
+    defineField({ name: "ctaLink",      title: "CTA Buton Linki",          type: "string" }),
+    defineField({ name: "seo",          title: "SEO",                      type: "seo" }),
   ],
 });

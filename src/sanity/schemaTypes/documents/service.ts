@@ -68,6 +68,22 @@ export const serviceType = defineType({
         { type: "customHtml" },
       ],
     }),
+    defineField({
+      name: "features",
+      title: "Öne Çıkan Özellikler (opsiyonel)",
+      type: "array",
+      of: [{ type: "object", fields: [
+        defineField({ name: "text", title: "Özellik", type: "string" }),
+      ]}],
+      description: "Hizmet detay sayfasında check-list olarak görünür. Ör: Proforma Hesaplama, Anahtar Teslim Hizmet",
+    }),
+    defineField({
+      name: "relatedProjects",
+      title: "İlgili Projeler (opsiyonel)",
+      type: "array",
+      of: [{ type: "reference", to: [{ type: "project" }] }],
+      description: "Hizmet detay sayfasında 'İlgili Projeler' olarak gösterilir.",
+    }),
     defineField({ name: "seo", title: "SEO", type: "seo" }),
   ],
 });

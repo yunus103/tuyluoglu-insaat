@@ -18,8 +18,7 @@ export const layoutQuery = groq`{
   }
 }`;
 
-// ─── Sayfalar ──────────────────────────────────────────────────────────────────
-
+// ─── Ana Sayfa ─────────────────────────────────────────────────────────────────
 export const homePageQuery = groq`*[_type == "homePage"][0] {
   // Hero
   heroVideoUrl,
@@ -60,37 +59,58 @@ export const homePageQuery = groq`*[_type == "homePage"][0] {
   }
 }`;
 
+// ─── Hakkımızda Sayfası ────────────────────────────────────────────────────────
 export const aboutPageQuery = groq`*[_type == "aboutPage"][0] {
-  pageTitle, pageSubtitle, body,
+  heroTitle, heroSubtitle,
+  pageTitle, pageSubtitle,
+  storyTitle, body,
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
+  stats[] { value, label },
+  values[] { title, description },
+  teamMembers[] {
+    name, role,
+    photo { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
+  },
   seo
 }`;
 
+// ─── İletişim Sayfası ─────────────────────────────────────────────────────────
 export const contactPageQuery = groq`*[_type == "contactPage"][0] {
-  pageTitle, pageSubtitle, formTitle, successMessage, seo
+  heroTitle, heroSubtitle,
+  pageTitle, pageSubtitle,
+  formTitle, successMessage, workingHours,
+  seo
 }`;
 
+// ─── Blog Sayfası ─────────────────────────────────────────────────────────────
 export const blogPageQuery = groq`*[_type == "blogPage"][0] {
-  pageTitle, pageSubtitle, ctaLabel, ctaLink, seo
+  heroTitle, heroSubtitle,
+  pageTitle, pageSubtitle,
+  ctaLabel, ctaLink, seo
 }`;
 
+// ─── Hizmetler Sayfası ────────────────────────────────────────────────────────
 export const servicesPageQuery = groq`*[_type == "servicesPage"][0] {
-  pageTitle, pageSubtitle, ctaLabel, ctaLink, seo
+  heroTitle, heroSubtitle,
+  pageTitle, pageSubtitle,
+  ctaLabel, ctaLink, seo
 }`;
 
+// ─── Projeler Sayfası ─────────────────────────────────────────────────────────
 export const projectsPageQuery = groq`*[_type == "projectsPage"][0] {
-  pageTitle, pageSubtitle, ctaLabel, ctaLink, seo
+  heroTitle, heroSubtitle,
+  pageTitle, pageSubtitle,
+  ctaLabel, ctaLink, seo
 }`;
 
 // ─── Blog ──────────────────────────────────────────────────────────────────────
-
 export const blogListQuery = groq`*[_type == "blogPost"] | order(publishedAt desc) {
-  title, slug, excerpt, publishedAt, category->{title, slug},
+  title, slug, excerpt, publishedAt, category->{ title, slug },
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
 }`;
 
 export const blogPostBySlugQuery = groq`*[_type == "blogPost" && slug.current == $slug][0] {
-  _id, title, slug, publishedAt, excerpt, category->{_id, title, slug}, seoTags,
+  _id, title, slug, publishedAt, excerpt, category->{ _id, title, slug }, seoTags,
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
   body[] {
     ...,
@@ -107,34 +127,34 @@ export const blogCategoriesQuery = groq`*[_type == "blogCategory"] | order(title
 }`;
 
 export const blogListByCategorySlugQuery = groq`*[_type == "blogPost" && category->slug.current == $slug] | order(publishedAt desc) {
-  title, slug, excerpt, publishedAt, category->{title, slug},
+  title, slug, excerpt, publishedAt, category->{ title, slug },
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
 }`;
 
 export const blogRelatedPostsQuery = groq`*[_type == "blogPost" && category._ref == $categoryId && _id != $currentPostId] | order(publishedAt desc)[0...3] {
-  title, slug, excerpt, publishedAt, category->{title, slug},
+  title, slug, excerpt, publishedAt, category->{ title, slug },
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
 }`;
 
 // ─── Hizmetler ─────────────────────────────────────────────────────────────────
-
 export const serviceListQuery = groq`*[_type == "service"] | order(_createdAt asc) {
-  title, slug,
+  title, slug, excerpt, serviceCategory,
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
 }`;
 
 export const serviceBySlugQuery = groq`*[_type == "service" && slug.current == $slug][0] {
-  title, slug,
+  title, slug, excerpt, serviceCategory,
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
   body[] {
     ...,
     _type == "image" => { asset->{ _id, url, metadata { lqip, dimensions } }, alt, alignment, size, hotspot, crop }
   },
+  features[] { text },
+  relatedProjects[]->{ title, slug, category, location, year, mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop } },
   seo
 }`;
 
 // ─── Projeler ──────────────────────────────────────────────────────────────────
-
 export const projectListQuery = groq`*[_type == "project"] | order(_createdAt desc) {
   title, slug, category, location, year, excerpt,
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
@@ -154,21 +174,25 @@ export const projectBySlugQuery = groq`*[_type == "project" && slug.current == $
   seo
 }`;
 
-// ─── Yasal Sayfalar ────────────────────────────────────────────────────────────
+// Aynı kategoriden diğer projeler (detay sayfasında "Diğer Projeler")
+export const relatedProjectsQuery = groq`*[_type == "project" && category == $category && slug.current != $slug] | order(_createdAt desc)[0...3] {
+  title, slug, category, location, year,
+  mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
+}`;
 
+// ─── Yasal Sayfalar ────────────────────────────────────────────────────────────
 export const legalPageBySlugQuery = groq`*[_type == "legalPage" && slug.current == $slug][0] {
   title, slug, body, _updatedAt, seo
 }`;
 
 // ─── Sitemap ───────────────────────────────────────────────────────────────────
-
 export const allSlugsForSitemapQuery = groq`{
   "blogPosts": *[_type == "blogPost" && defined(slug.current)] { "slug": slug.current, _updatedAt },
-  "projects": *[_type == "project" && defined(slug.current)] { "slug": slug.current, _updatedAt }
+  "projects":  *[_type == "project"  && defined(slug.current)] { "slug": slug.current, _updatedAt },
+  "services":  *[_type == "service"  && defined(slug.current)] { "slug": slug.current, _updatedAt }
 }`;
 
 // ─── Varsayılan SEO ────────────────────────────────────────────────────────────
-
 export const defaultSeoQuery = groq`*[_type == "siteSettings"][0] {
   "title": defaultSeo.metaTitle,
   "description": defaultSeo.metaDescription,
