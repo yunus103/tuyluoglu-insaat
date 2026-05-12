@@ -79,8 +79,13 @@ export function serviceListJsonLd(settings: any, services: { title: string }[]) 
 // legacy alias
 export const serviceJsonLd = serviceListJsonLd;
 
+const CATEGORY_LABELS: Record<string, string> = {
+  insaat:   "İnşaat",
+  mimarlik: "Mimarlık",
+};
+
 /**
- * Tek hizmet sayfası JSON-LD
+ * Tek hizmet sayfası JSON-LD — Service schema + areaServed (Kadıköy / İstanbul)
  */
 export function singleServiceJsonLd(settings: any, service: any) {
   const base = getSiteUrl();
@@ -90,12 +95,66 @@ export function singleServiceJsonLd(settings: any, service: any) {
     name: service?.title,
     description: service?.excerpt,
     url: `${base}/hizmetler/${service?.slug?.current}`,
+    ...(service?.serviceCategory && { serviceType: CATEGORY_LABELS[service.serviceCategory] }),
+    areaServed: [
+      {
+        "@type": "AdministrativeArea",
+        name: "Kadıköy",
+        containedInPlace: { "@type": "City", name: "İstanbul" },
+      },
+      {
+        "@type": "City",
+        name: "İstanbul",
+        containedInPlace: { "@type": "Country", name: "Türkiye" },
+      },
+    ],
     provider: {
       "@type": "ConstructionCompany",
       name: settings?.siteName,
       url: base,
+      ...(settings?.contactInfo?.phone && { telephone: settings.contactInfo.phone }),
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Kadıköy",
+        addressRegion: "İstanbul",
+        addressCountry: "TR",
+        ...(settings?.contactInfo?.address && { streetAddress: settings.contactInfo.address }),
+      },
     },
     ...(service?.mainImage?.asset?.url && { image: service.mainImage.asset.url }),
+  };
+}
+
+/**
+ * FAQPage JSON-LD — hizmet sayfası SSS bloğu için
+ */
+export function faqPageJsonLd(items: { question: string; answer: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  };
+}
+
+/**
+ * BreadcrumbList JSON-LD
+ * items: [{ name, href }] — Ana Sayfa otomatik başa eklenir
+ */
+export function breadcrumbJsonLd(base: string, items: { name: string; href: string }[]) {
+  const allItems = [{ name: "Ana Sayfa", href: "/" }, ...items];
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: allItems.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: `${base}${item.href === "/" ? "" : item.href}`,
+    })),
   };
 }
 

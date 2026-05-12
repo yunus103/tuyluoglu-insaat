@@ -149,9 +149,11 @@ export const serviceBySlugQuery = groq`*[_type == "service" && slug.current == $
     ...,
     _type == "image" => { asset->{ _id, url, metadata { lqip, dimensions } }, alt, alignment, size, hotspot, crop }
   },
-  features[] { text },
-  relatedProjects[]->{ title, slug, category, location, year, mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop } },
-  seo
+  faq[] { question, answer },
+  seo,
+  "allServices": *[_type == "service"] | order(_createdAt asc) {
+    title, slug, serviceCategory
+  }
 }`;
 
 // ─── Projeler ──────────────────────────────────────────────────────────────────

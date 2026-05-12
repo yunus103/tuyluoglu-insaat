@@ -1,6 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
+
+interface BreadcrumbItem {
+  label: string;
+  href?: string;
+  active?: boolean;
+}
 
 interface PageHeroProps {
   /** Küçük üst etiket, ör: "Hakkımızda" */
@@ -11,9 +18,11 @@ interface PageHeroProps {
   subtitle?: string;
   /** Arka planda çok büyük dekoratif metin (blueprint estetiği) */
   decorativeText?: string;
+  /** Breadcrumb linkleri — Ana Sayfa otomatik eklenir */
+  breadcrumbItems?: BreadcrumbItem[];
 }
 
-export function PageHero({ eyebrow, title, subtitle, decorativeText }: PageHeroProps) {
+export function PageHero({ eyebrow, title, subtitle, decorativeText, breadcrumbItems }: PageHeroProps) {
   return (
     <section
       className="relative bg-[var(--color-black)] overflow-hidden"
@@ -55,6 +64,30 @@ export function PageHero({ eyebrow, title, subtitle, decorativeText }: PageHeroP
       <div className="site-container relative z-10 flex flex-col justify-center py-16 md:py-20"
         style={{ minHeight: "inherit" }}
       >
+        {/* Breadcrumb */}
+        {breadcrumbItems && breadcrumbItems.length > 0 && (
+          <nav aria-label="Breadcrumb" className="mb-5">
+            <ol className="flex items-center gap-1.5 flex-wrap">
+              <li>
+                <Link href="/" className="text-white/35 hover:text-white/60 text-[10px] uppercase tracking-[0.15em] transition-colors">
+                  Ana Sayfa
+                </Link>
+              </li>
+              {breadcrumbItems.map((crumb, i) => (
+                <li key={i} className="flex items-center gap-1.5">
+                  <span className="text-white/20 text-[10px]">/</span>
+                  {crumb.href && !crumb.active ? (
+                    <Link href={crumb.href} className="text-white/35 hover:text-white/60 text-[10px] uppercase tracking-[0.15em] transition-colors">
+                      {crumb.label}
+                    </Link>
+                  ) : (
+                    <span className="text-white/55 text-[10px] uppercase tracking-[0.15em]">{crumb.label}</span>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )}
         {eyebrow && (
           <motion.div
             initial={{ opacity: 0, x: -12 }}
