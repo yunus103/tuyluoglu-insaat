@@ -206,6 +206,19 @@ export function ServicesSection({ data }: ServicesSectionProps) {
           </Link>
         </motion.div>
       </div>
+
+      {/* ── Angled SVG Divider — sharp architectural cut into Projects zone ── */}
+      <div className="relative -mb-px">
+        <svg
+          className="block w-full"
+          viewBox="0 0 1440 100"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+          style={{ height: "clamp(50px, 7vw, 100px)" }}
+        >
+          <polygon points="0,100 1440,0 1440,100" fill="#111111" />
+        </svg>
+      </div>
     </section>
   );
 }

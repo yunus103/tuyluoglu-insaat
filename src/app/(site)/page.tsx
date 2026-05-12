@@ -6,7 +6,6 @@ import { buildMetadata } from "@/lib/seo";
 import { HeroSection }     from "@/components/home/HeroSection";
 import { AboutSection }    from "@/components/home/AboutSection";
 import { WhyUsSection }    from "@/components/home/WhyUsSection";
-import { MarqueeSection }  from "@/components/home/MarqueeSection";
 import { ServicesSection } from "@/components/home/ServicesSection";
 import { ProjectsSection } from "@/components/home/ProjectsSection";
 import { CtaSection }      from "@/components/home/CtaSection";
@@ -57,7 +56,6 @@ export default async function HomePage() {
       <HeroSection data={data} />
       <AboutSection data={data} />
       <WhyUsSection data={data} />
-      <MarqueeSection />
       <ServicesSection data={data} />
       <ProjectsSection data={data} />
       <CtaSection data={data} />

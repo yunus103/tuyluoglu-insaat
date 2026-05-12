@@ -20,8 +20,10 @@ export function CtaSection({ data }: CtaSectionProps) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
-  const title    = data?.ctaTitle       || "Güvenli Yapılar, Sağlam Gelecekler";
-  const subtitle = data?.ctaSubtitle    || "Yılların Tecrübesiyle, Güvenli Yaşam Alanları İnşa Ediyoruz";
+  const title = data?.ctaTitle || "Güvenli Yapılar, Sağlam Gelecekler";
+  const subtitle =
+    data?.ctaSubtitle ||
+    "Yılların Tecrübesiyle, Güvenli Yaşam Alanları İnşa Ediyoruz";
   const btnLabel = data?.ctaButtonLabel || "İletişime Geçin";
 
   const bgImageUrl = data?.ctaBgImage?.asset?.url
@@ -30,7 +32,6 @@ export function CtaSection({ data }: CtaSectionProps) {
 
   return (
     <section className="relative bg-[var(--color-black)] overflow-hidden">
-
       {/* ── Background: Photo (if provided) or Watermark fallback ── */}
       {bgImageUrl ? (
         <>
@@ -72,7 +73,8 @@ export function CtaSection({ data }: CtaSectionProps) {
             aria-hidden="true"
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: "radial-gradient(ellipse 80% 50% at 50% 100%, rgba(107,151,196,0.08) 0%, transparent 70%)",
+              background:
+                "radial-gradient(ellipse 80% 50% at 50% 100%, rgba(107,151,196,0.08) 0%, transparent 70%)",
             }}
           />
         </>
@@ -83,7 +85,6 @@ export function CtaSection({ data }: CtaSectionProps) {
 
       <div ref={ref} className="site-container relative z-10 py-28 md:py-36">
         <div className="max-w-3xl mx-auto text-center">
-
           {/* Label */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -92,7 +93,9 @@ export function CtaSection({ data }: CtaSectionProps) {
             className="flex items-center justify-center gap-3 mb-8"
           >
             <span className="h-px w-10 bg-[var(--color-accent)]" />
-            <span className="text-[10px] uppercase tracking-[0.3em] text-[var(--color-accent)]">İletişim</span>
+            <span className="text-[10px] uppercase tracking-[0.3em] text-[var(--color-accent)]">
+              İletişim
+            </span>
             <span className="h-px w-10 bg-[var(--color-accent)]" />
           </motion.div>
 
@@ -128,22 +131,11 @@ export function CtaSection({ data }: CtaSectionProps) {
               className="group inline-flex items-center gap-3 px-10 py-4 border border-white/25 text-white text-[11px] uppercase tracking-[0.2em] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-all duration-400"
             >
               {btnLabel}
-              <RiArrowRightLine size={14} className="transition-transform group-hover:translate-x-1" />
+              <RiArrowRightLine
+                size={14}
+                className="transition-transform group-hover:translate-x-1"
+              />
             </Link>
-          </motion.div>
-
-          {/* Mini stats below CTA */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.8, delay: 0.55 }}
-            className="mt-14 flex items-center justify-center gap-6 text-[10px] uppercase tracking-[0.2em] text-white/20"
-          >
-            <span>38+ Yıllık Tecrübe</span>
-            <span className="text-[var(--color-accent)]/40">◆</span>
-            <span>19+ Tamamlanan Proje</span>
-            <span className="text-[var(--color-accent)]/40 hidden sm:inline">◆</span>
-            <span className="hidden sm:inline">%100 Zamanında Teslimat</span>
           </motion.div>
         </div>
       </div>

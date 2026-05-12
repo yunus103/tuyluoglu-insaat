@@ -29,17 +29,23 @@ export const navigationType = defineType({
   name: "navigation",
   title: "Navigasyon",
   type: "document",
+  groups: [
+    { name: "header", title: "Header (Üst Menü)" },
+    { name: "footer", title: "Footer (Alt Menü)" },
+  ],
   fields: [
     defineField({
       name: "headerLinks",
       title: "Header Menü Linkleri",
       type: "array",
+      group: "header",
       of: [{ type: "object", fields: navItemFields, preview: { select: { title: "label", subtitle: "href" } } }],
     }),
     defineField({
       name: "footerLinks",
       title: "Footer Menü Linkleri",
       type: "array",
+      group: "footer",
       of: [{ type: "object", fields: navItemFields, preview: { select: { title: "label", subtitle: "href" } } }],
     }),
   ],

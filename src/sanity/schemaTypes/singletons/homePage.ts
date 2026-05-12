@@ -4,6 +4,15 @@ export const homePageType = defineType({
   name: "homePage",
   title: "Ana Sayfa",
   type: "document",
+  groups: [
+    { name: "hero", title: "Hero" },
+    { name: "about", title: "Hakkımızda" },
+    { name: "services", title: "Hizmetler" },
+    { name: "whyUs", title: "Neden Biz" },
+    { name: "projects", title: "Projeler" },
+    { name: "cta", title: "Alt Banner (CTA)" },
+    { name: "seo", title: "SEO" },
+  ],
   fields: [
 
     // ─── Hero ────────────────────────────────────────────────
@@ -11,12 +20,14 @@ export const homePageType = defineType({
       name: "heroVideoUrl",
       title: "Hero Video URL",
       type: "url",
+      group: "hero",
       description: "CDN'deki video URL'si (Cloudinary, Bunny.net, S3 vb.). MP4 formatı önerilir.",
     }),
     defineField({
       name: "heroPosterImage",
       title: "Hero Poster / Fallback Görseli",
       type: "image",
+      group: "hero",
       options: { hotspot: true },
       fields: [
         defineField({ name: "alt", title: "Alt Metni", type: "string" }),
@@ -27,12 +38,14 @@ export const homePageType = defineType({
       name: "heroCtaLabel",
       title: "Hero Buton Metni",
       type: "string",
+      group: "hero",
       initialValue: "Projelerimizi İnceleyin",
     }),
     defineField({
       name: "heroCtaLink",
       title: "Hero Buton Linki",
       type: "string",
+      group: "hero",
       initialValue: "/projeler",
       description: "Örn: /projeler, /iletisim",
     }),
@@ -42,12 +55,14 @@ export const homePageType = defineType({
       name: "aboutTitle",
       title: "Hakkımızda Başlık",
       type: "string",
+      group: "about",
       initialValue: "1985'ten Beri Güven",
     }),
     defineField({
       name: "aboutText",
       title: "Hakkımızda Metin",
       type: "text",
+      group: "about",
       rows: 4,
       initialValue: "Tüylüoğlu İnşaat olarak 1985'ten bu yana güvenli ve kaliteli yapılar inşa ediyoruz. Konut, ticari ve kentsel dönüşüm projelerinde edindiğimiz derin tecrübe ile her projeyi titizlikle teslim ediyoruz.",
     }),
@@ -55,6 +70,7 @@ export const homePageType = defineType({
       name: "aboutImage",
       title: "Hakkımızda Görseli",
       type: "image",
+      group: "about",
       options: { hotspot: true },
       fields: [defineField({ name: "alt", title: "Alt Metni", type: "string" })],
     }),
@@ -62,6 +78,7 @@ export const homePageType = defineType({
       name: "stats",
       title: "İstatistikler",
       type: "array",
+      group: "about",
       of: [
         {
           type: "object",
@@ -85,12 +102,14 @@ export const homePageType = defineType({
       name: "servicesTitle",
       title: "Hizmetler Bölüm Başlığı",
       type: "string",
+      group: "services",
       initialValue: "Hizmetlerimiz",
     }),
     defineField({
       name: "featuredServices",
       title: "Öne Çıkan Hizmetler",
       type: "array",
+      group: "services",
       of: [{ type: "reference", to: [{ type: "service" }] }],
       description: "Ana sayfada gösterilecek hizmetleri seçin. Sıraya göre listelenir.",
     }),
@@ -98,6 +117,7 @@ export const homePageType = defineType({
       name: "insaatTabImage",
       title: "İnşaat Tab Görseli",
       type: "image",
+      group: "services",
       options: { hotspot: true },
       fields: [defineField({ name: "alt", title: "Alt Metni", type: "string" })],
       description: "Hizmetler bölümünde İnşaat tabı açıkken sol panelde görünecek fotoğraf. Önerilen: dikey, 900×1100px.",
@@ -106,6 +126,7 @@ export const homePageType = defineType({
       name: "mimarlikTabImage",
       title: "Mimarlık Tab Görseli",
       type: "image",
+      group: "services",
       options: { hotspot: true },
       fields: [defineField({ name: "alt", title: "Alt Metni", type: "string" })],
       description: "Hizmetler bölümünde Mimarlık tabı açıkken sol panelde görünecek fotoğraf. Önerilen: dikey, 900×1100px.",
@@ -116,12 +137,14 @@ export const homePageType = defineType({
       name: "whyUsTitle",
       title: "Neden Biz Başlık",
       type: "string",
+      group: "whyUs",
       initialValue: "Neden Tüylüoğlu İnşaat?",
     }),
     defineField({
       name: "whyUsItems",
       title: "Neden Biz Maddeleri",
       type: "array",
+      group: "whyUs",
       of: [
         {
           type: "object",
@@ -145,6 +168,7 @@ export const homePageType = defineType({
       name: "projectsTitle",
       title: "Projeler Bölüm Başlığı",
       type: "string",
+      group: "projects",
       initialValue: "Projelerimiz",
     }),
 
@@ -153,22 +177,25 @@ export const homePageType = defineType({
       name: "ctaTitle",
       title: "CTA Başlık",
       type: "string",
+      group: "cta",
       initialValue: "Güvenli Yapılar, Sağlam Gelecekler",
     }),
     defineField({
       name: "ctaSubtitle",
       title: "CTA Alt Başlık",
       type: "string",
+      group: "cta",
       initialValue: "Yılların Tecrübesiyle, Güvenli Yaşam Alanları İnşa Ediyoruz",
     }),
     defineField({
       name: "ctaButtonLabel",
       title: "CTA Buton Metni",
       type: "string",
+      group: "cta",
       initialValue: "İletişime Geçin",
     }),
 
     // ─── SEO ──────────────────────────────────────────────────
-    defineField({ name: "seo", title: "SEO", type: "seo" }),
+    defineField({ name: "seo", title: "SEO", type: "seo", group: "seo" }),
   ],
 });

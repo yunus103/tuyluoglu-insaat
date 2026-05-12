@@ -103,7 +103,7 @@ export function WhyUsSection({ data }: WhyUsSectionProps) {
           aria-hidden="true"
           style={{ height: "clamp(50px, 7vw, 100px)" }}
         >
-          <polygon points="0,100 1440,0 1440,100" fill="#0A0A0A" />
+          <polygon points="0,100 1440,0 1440,100" fill="#0C0C0C" />
         </svg>
       </div>
     </section>

@@ -68,7 +68,7 @@ export const aboutPageQuery = groq`*[_type == "aboutPage"][0] {
   stats[] { value, label },
   values[] { title, description },
   teamMembers[] {
-    name, role,
+    name, role, isFounder, shortBio,
     photo { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
   },
   seo

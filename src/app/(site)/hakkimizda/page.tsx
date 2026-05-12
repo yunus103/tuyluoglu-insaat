@@ -183,6 +183,7 @@ export default async function AboutPage() {
       {/* ── Ekip ──────────────────────────────────────────────────── */}
       <section className="bg-white">
         <div className="site-container py-20 md:py-28">
+          {/* Başlık */}
           <div className="flex items-end justify-between mb-12 md:mb-16 gap-6">
             <div>
               <div className="flex items-center gap-3 mb-5">
@@ -200,45 +201,97 @@ export default async function AboutPage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {team.map((member: any, i: number) => {
-              const photoUrl = member.photo?.asset?.url
-                ? urlForImage(member.photo)?.width(600).height(750).quality(80).url()
-                : null;
-              return (
-                <div key={i} className="group">
-                  {/* Fotoğraf */}
-                  <div className="relative aspect-[4/5] bg-[var(--color-surface)] overflow-hidden mb-4">
-                    {photoUrl ? (
-                      <Image
-                        src={photoUrl}
-                        alt={member.name}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-103"
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="font-heading italic text-[var(--color-muted)] opacity-30 select-none"
-                          style={{ fontSize: "5rem" }}>
-                          {member.name?.charAt(0) || "?"}
+          {(() => {
+            // Kurucuyu bul — isFounder=true olan önce gelir, yoksa ilk eleman
+            const founder = team.find((m: any) => m.isFounder) ?? team[0];
+            const others  = team.filter((m: any) => m !== founder);
+
+            const founderPhotoUrl = founder?.photo?.asset?.url
+              ? urlForImage(founder.photo)?.width(800).height(1000).quality(85).url()
+              : null;
+
+            return (
+              <>
+                {/* ── Kurucu Spotlight ──────────────────────── */}
+                {founder && (
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 mb-12 md:mb-14 border border-[var(--color-border)]">
+                    {/* Fotoğraf */}
+                    <div className="lg:col-span-4 relative aspect-[4/5] lg:aspect-auto lg:h-[480px] bg-[var(--color-surface)] overflow-hidden">
+                      {founderPhotoUrl ? (
+                        <Image
+                          src={founderPhotoUrl}
+                          alt={founder.photo?.alt || founder.name}
+                          fill
+                          className="object-cover object-top"
+                          sizes="(max-width: 1024px) 100vw, 33vw"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <span
+                            className="font-heading italic text-[var(--color-muted)] opacity-20 select-none"
+                            style={{ fontSize: "8rem" }}
+                          >
+                            {founder.name?.charAt(0) || "?"}
+                          </span>
+                        </div>
+                      )}
+                      {/* Accent overlay bottom stripe */}
+                      <div className="absolute bottom-0 left-0 right-0 h-1 bg-[var(--color-accent)]" />
+                    </div>
+
+                    {/* Metin */}
+                    <div className="lg:col-span-8 flex flex-col justify-center px-8 md:px-12 py-10 md:py-14 bg-white">
+                      {/* "Kurucu" rozeti */}
+                      <span className="inline-flex items-center gap-2 mb-6 self-start">
+                        <span className="w-5 h-px bg-[var(--color-accent)]" />
+                        <span className="text-[10px] uppercase tracking-[0.25em] text-[var(--color-accent)]">
+                          Firma Sahibi
                         </span>
-                      </div>
-                    )}
-                    <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-black/40 to-transparent" />
-                  </div>
-                  {/* İsim + Unvan */}
-                  <div className="flex items-start gap-2">
-                    <span className="w-1 h-1 rounded-full bg-[var(--color-accent)] mt-2 shrink-0" />
-                    <div>
-                      <p className="font-heading text-[var(--color-black)] text-xl leading-tight">{member.name}</p>
-                      <p className="text-xs text-[var(--color-muted)] uppercase tracking-[0.12em] mt-1">{member.role}</p>
+                      </span>
+
+                      <h3 className="font-heading text-[var(--color-black)] text-3xl md:text-4xl leading-tight mb-2">
+                        {founder.name}
+                      </h3>
+                      <p className="text-[11px] uppercase tracking-[0.2em] text-[var(--color-muted)] mb-6">
+                        {founder.role}
+                      </p>
+
+                      {founder.shortBio && (
+                        <p className="text-[var(--color-gray)] leading-relaxed text-base max-w-lg border-l-2 border-[var(--color-accent)] pl-5">
+                          {founder.shortBio}
+                        </p>
+                      )}
                     </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                )}
+
+                {/* ── Diğer Ekip Üyeleri — Compact List ──── */}
+                {others.length > 0 && (
+                  <div className="divide-y divide-[var(--color-border)]">
+                    {others.map((member: any, i: number) => (
+                      <div
+                        key={i}
+                        className="flex items-center justify-between py-5 group hover:bg-[var(--color-surface)] transition-colors duration-200 px-1"
+                      >
+                        <div className="flex items-center gap-4">
+                          {/* Monogram dot */}
+                          <span className="w-8 h-8 rounded-full bg-[var(--color-surface)] border border-[var(--color-border)] flex items-center justify-center text-[11px] font-heading text-[var(--color-muted)] shrink-0 group-hover:border-[var(--color-accent)] group-hover:text-[var(--color-accent)] transition-colors duration-200">
+                            {member.name?.split(" ").map((n: string) => n[0]).slice(0, 2).join("") || "?"}
+                          </span>
+                          <span className="font-heading text-[var(--color-black)] text-lg leading-tight">
+                            {member.name}
+                          </span>
+                        </div>
+                        <span className="text-[10px] uppercase tracking-[0.18em] text-[var(--color-muted)] text-right ml-4">
+                          {member.role}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
+            );
+          })()}
         </div>
       </section>
 
