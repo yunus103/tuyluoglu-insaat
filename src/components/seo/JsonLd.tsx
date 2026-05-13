@@ -167,13 +167,13 @@ export function projectJsonLd(settings: any, project: any) {
     "@context": "https://schema.org",
     "@type": "CreativeWork",
     name: project?.title,
-    description: project?.excerpt,
+    description: project?.seo?.metaDescription || project?.title,
     url: `${base}/projeler/${project?.slug?.current}`,
     creator: {
       "@type": "ConstructionCompany",
       name: settings?.siteName,
     },
-    ...(project?.year && { dateCreated: String(project.year) }),
+    ...(project?.period && { dateCreated: String(project.period) }),
     ...(project?.mainImage?.asset?.url && { image: project.mainImage.asset.url }),
   };
 }

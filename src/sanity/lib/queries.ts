@@ -158,12 +158,12 @@ export const serviceBySlugQuery = groq`*[_type == "service" && slug.current == $
 
 // ─── Projeler ──────────────────────────────────────────────────────────────────
 export const projectListQuery = groq`*[_type == "project"] | order(_createdAt desc) {
-  title, slug, category, location, year, excerpt,
+  title, slug, category, location, period,
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
 }`;
 
 export const projectBySlugQuery = groq`*[_type == "project" && slug.current == $slug][0] {
-  title, slug, category, location, year, excerpt,
+  title, slug, category, location, period,
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
   gallery[] {
     asset->{ _id, url, metadata { lqip, dimensions } },
@@ -178,7 +178,7 @@ export const projectBySlugQuery = groq`*[_type == "project" && slug.current == $
 
 // Aynı kategoriden diğer projeler (detay sayfasında "Diğer Projeler")
 export const relatedProjectsQuery = groq`*[_type == "project" && category == $category && slug.current != $slug] | order(_createdAt desc)[0...3] {
-  title, slug, category, location, year,
+  title, slug, category, location, period,
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
 }`;
 

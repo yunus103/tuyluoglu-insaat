@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!project) return {};
   return buildMetadata({
     title: project.title,
-    description: project.excerpt,
+    description: project.title, // Fallback for meta description
     canonicalPath: `/projeler/${slug}`,
     pageSeo: project.seo,
   });
@@ -123,10 +123,10 @@ export default async function ProjectDetailPage({ params }: Props) {
                 {project.location}
               </span>
             )}
-            {project.year && (
+            {project.period && (
               <span className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-white/50">
                 <RiCalendarLine size={12} />
-                {project.year}
+                {project.period}
               </span>
             )}
           </div>
@@ -150,17 +150,12 @@ export default async function ProjectDetailPage({ params }: Props) {
 
             {/* Body metin — sol */}
             <div className="lg:col-span-7">
-              {project.excerpt && (
-                <p className="text-lg text-[var(--color-gray)] leading-relaxed mb-8 font-body pl-5 border-l-2 border-[var(--color-accent)]">
-                  {project.excerpt}
-                </p>
-              )}
               {project.body && (
                 <div className="prose prose-neutral max-w-none text-[var(--color-gray)] leading-relaxed">
                   <RichText value={project.body} />
                 </div>
               )}
-              {!project.excerpt && !project.body && (
+              {!project.body && (
                 <p className="text-[var(--color-muted)] text-sm italic py-4">
                   Proje detay içeriği yakında eklenecek.
                 </p>
@@ -190,12 +185,12 @@ export default async function ProjectDetailPage({ params }: Props) {
                       </div>
                     </div>
                   )}
-                  {project.year && (
+                  {project.period && (
                     <div className="flex items-start gap-4">
                       <RiCalendarLine size={15} className="text-[var(--color-accent)] mt-0.5 shrink-0" />
                       <div>
-                        <p className="text-[9px] uppercase tracking-[0.2em] text-[var(--color-muted)] mb-1">Yapım Yılı</p>
-                        <p className="text-sm text-[var(--color-dark)]">{project.year}</p>
+                        <p className="text-[9px] uppercase tracking-[0.2em] text-[var(--color-muted)] mb-1">Proje Dönemi</p>
+                        <p className="text-sm text-[var(--color-dark)]">{project.period}</p>
                       </div>
                     </div>
                   )}
@@ -279,7 +274,7 @@ export default async function ProjectDetailPage({ params }: Props) {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                     <div className="absolute bottom-0 inset-x-0 p-5">
                       <p className="font-heading text-white text-lg">{rp.title}</p>
-                      {rp.year && <p className="text-[9px] text-white/40 mt-1">{rp.year}</p>}
+                      {rp.period && <p className="text-[9px] text-white/40 mt-1">{rp.period}</p>}
                     </div>
                   </Link>
                 );

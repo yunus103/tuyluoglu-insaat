@@ -120,10 +120,10 @@ export function ProjectsGrid({ projects }: ProjectsGridProps) {
                           {catLabel}
                         </span>
                       )}
-                      {catLabel && project.year && <span className="text-white/20">·</span>}
-                      {project.year && (
+                      {catLabel && project.period && <span className="text-white/20">·</span>}
+                      {project.period && (
                         <span className="text-[9px] uppercase tracking-[0.18em] text-white/50">
-                          {project.year}
+                          {project.period}
                         </span>
                       )}
                     </div>

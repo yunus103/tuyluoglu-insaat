@@ -155,7 +155,7 @@ export function ServicesSection({ data }: ServicesSectionProps) {
               {activeServices.map((service: any, i: number) => (
                 <Link
                   key={service._id}
-                  href={`/hizmetler#${service.slug?.current ?? ""}`}
+                  href={`/hizmetler/${service.slug?.current ?? ""}`}
                   className="group block border-b border-white/[0.07] py-7 first:border-t first:border-white/[0.07] transition-all duration-300 hover:pl-2"
                 >
                   <div className="flex items-start gap-5">

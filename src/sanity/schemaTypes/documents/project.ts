@@ -54,10 +54,10 @@ export const projectType = defineType({
       description: "Örn: İstanbul, Kadıköy",
     }),
     defineField({
-      name: "year",
-      title: "Yapım Yılı",
-      type: "number",
-      description: "Örn: 2023",
+      name: "period",
+      title: "Proje Dönemi",
+      type: "string",
+      description: "Örn: 2027 - 2028",
     }),
     defineField({
       name: "mainImage",
@@ -96,13 +96,7 @@ export const projectType = defineType({
       ],
       description: "Proje detay sayfasında lightbox ile gösterilecek fotoğraflar. Önerilen boyut: 1920×1280px.",
     }),
-    defineField({
-      name: "excerpt",
-      title: "Kısa Açıklama",
-      type: "text",
-      rows: 3,
-      description: "Projeler listesinde ve SEO için kullanılır. Maksimum 160 karakter.",
-    }),
+
     defineField({
       name: "body",
       title: "Proje Detayı",
