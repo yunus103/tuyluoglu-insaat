@@ -53,10 +53,16 @@ export const homePageQuery = groq`*[_type == "homePage"][0] {
   seo,
 
   // İlgili içerikler — ayrı sorgu yerine burada çek
-  "featuredProjects": *[_type == "project"] | order(_createdAt desc)[0...6] {
-    title, slug,
-    mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
-  }
+  "featuredProjects": select(
+    defined(featuredProjects) && count(featuredProjects) > 0 => featuredProjects[]->{
+      title, slug,
+      mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
+    },
+    *[_type == "project"] | order(_createdAt desc)[0...3] {
+      title, slug,
+      mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
+    }
+  )
 }`;
 
 // ─── Hakkımızda Sayfası ────────────────────────────────────────────────────────
@@ -100,7 +106,11 @@ export const servicesPageQuery = groq`*[_type == "servicesPage"][0] {
 export const projectsPageQuery = groq`*[_type == "projectsPage"][0] {
   heroTitle, heroSubtitle,
   pageTitle, pageSubtitle,
-  ctaLabel, ctaLink, seo
+  ctaLabel, ctaLink, seo,
+  "orderedProjects": projectsOrder[]->{
+    _id, title, slug, category, location, period, status,
+    mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
+  }
 }`;
 
 // ─── Blog ──────────────────────────────────────────────────────────────────────
@@ -158,12 +168,12 @@ export const serviceBySlugQuery = groq`*[_type == "service" && slug.current == $
 
 // ─── Projeler ──────────────────────────────────────────────────────────────────
 export const projectListQuery = groq`*[_type == "project"] | order(_createdAt desc) {
-  title, slug, category, location, period,
+  _id, title, slug, category, location, period, status,
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
 }`;
 
 export const projectBySlugQuery = groq`*[_type == "project" && slug.current == $slug][0] {
-  title, slug, category, location, period,
+  title, slug, category, location, period, status,
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
   gallery[] {
     asset->{ _id, url, metadata { lqip, dimensions } },
@@ -178,7 +188,7 @@ export const projectBySlugQuery = groq`*[_type == "project" && slug.current == $
 
 // Aynı kategoriden diğer projeler (detay sayfasında "Diğer Projeler")
 export const relatedProjectsQuery = groq`*[_type == "project" && category == $category && slug.current != $slug] | order(_createdAt desc)[0...3] {
-  title, slug, category, location, period,
+  title, slug, category, location, period, status,
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
 }`;
 

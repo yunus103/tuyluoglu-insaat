@@ -10,7 +10,7 @@ import { urlForImage } from "@/sanity/lib/image";
 import { RichText } from "@/components/ui/RichText";
 import { LightboxGallery } from "@/components/ui/Lightbox";
 import { JsonLd, projectJsonLd } from "@/components/seo/JsonLd";
-import { RiArrowLeftLine, RiArrowRightLine, RiMapPin2Line, RiCalendarLine, RiLayoutGridLine } from "react-icons/ri";
+import { RiArrowLeftLine, RiArrowRightLine, RiMapPin2Line, RiCalendarLine, RiLayoutGridLine, RiCheckboxCircleLine } from "react-icons/ri";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -27,6 +27,11 @@ const CATEGORY_LABELS: Record<string, string> = {
   "mimarlik-projesi": "Mimarlık Projesi",
   "restorasyon":      "Restorasyon",
   "endustriyel":      "Endüstriyel",
+};
+
+const STATUS_LABELS: Record<string, string> = {
+  "completed": "Tamamlandı",
+  "ongoing":   "Devam Ediyor",
 };
 
 export async function generateStaticParams() {
@@ -129,6 +134,12 @@ export default async function ProjectDetailPage({ params }: Props) {
                 {project.period}
               </span>
             )}
+            {project.status && (
+              <span className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-white/50">
+                <RiCheckboxCircleLine size={12} className="text-[var(--color-accent)]" />
+                {STATUS_LABELS[project.status] ?? project.status}
+              </span>
+            )}
           </div>
         </div>
       </section>
@@ -191,6 +202,15 @@ export default async function ProjectDetailPage({ params }: Props) {
                       <div>
                         <p className="text-[9px] uppercase tracking-[0.2em] text-[var(--color-muted)] mb-1">Proje Dönemi</p>
                         <p className="text-sm text-[var(--color-dark)]">{project.period}</p>
+                      </div>
+                    </div>
+                  )}
+                  {project.status && (
+                    <div className="flex items-start gap-4">
+                      <RiCheckboxCircleLine size={15} className="text-[var(--color-accent)] mt-0.5 shrink-0" />
+                      <div>
+                        <p className="text-[9px] uppercase tracking-[0.2em] text-[var(--color-muted)] mb-1">Durum</p>
+                        <p className="text-sm text-[var(--color-dark)]">{STATUS_LABELS[project.status] ?? project.status}</p>
                       </div>
                     </div>
                   )}

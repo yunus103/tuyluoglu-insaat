@@ -21,6 +21,14 @@ export default async function ProjectsListPage() {
     client.fetch(projectListQuery, {}, { next: { tags: ["projects"] } }),
   ]);
 
+  const orderedProjects = pageData?.orderedProjects || [];
+  const allProjects = projects || [];
+
+  // De-duplicate and apply manual ordering
+  const orderedIds = new Set(orderedProjects.map((p: any) => p._id).filter(Boolean));
+  const remainingProjects = allProjects.filter((p: any) => !orderedIds.has(p._id));
+  const finalProjects = [...orderedProjects, ...remainingProjects];
+
   return (
     <>
       {/* ── PageHero ──────────────────────────────────────────────── */}
@@ -34,7 +42,7 @@ export default async function ProjectsListPage() {
       {/* ── Grid + Filter (Client Component) ─────────────────────── */}
       <section className="bg-white">
         <div className="site-container py-16 md:py-20">
-          <ProjectsGrid projects={projects || []} />
+          <ProjectsGrid projects={finalProjects} />
         </div>
       </section>
     </>

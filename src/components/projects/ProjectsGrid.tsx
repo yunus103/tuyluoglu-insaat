@@ -25,55 +25,48 @@ interface ProjectsGridProps {
   projects: any[];
 }
 
-export function ProjectsGrid({ projects }: ProjectsGridProps) {
-  const [activeCategory, setActiveCategory] = useState<string>("tumu");
+const STATUS_LABELS: Record<string, string> = {
+  "completed": "Tamamlandı",
+  "ongoing":   "Devam Ediyor",
+};
 
-  // Projeler arasında bulunan kategoriler
-  const categories = useMemo(() => {
-    const cats = Array.from(new Set(projects.map((p) => p.category).filter(Boolean)));
-    return cats;
-  }, [projects]);
+export function ProjectsGrid({ projects }: ProjectsGridProps) {
+  const [activeStatus, setActiveStatus] = useState<string>("tumu");
 
   const filtered = useMemo(() => {
-    if (activeCategory === "tumu") return projects;
-    return projects.filter((p) => p.category === activeCategory);
-  }, [projects, activeCategory]);
+    if (activeStatus === "tumu") return projects;
+    return projects.filter((p) => p.status === activeStatus);
+  }, [projects, activeStatus]);
+
+  const statuses = ["tumu", "completed", "ongoing"];
 
   return (
     <>
-      {/* ── Kategori filtreleri ───────────────────────────── */}
-      {categories.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-10">
-          <button
-            onClick={() => setActiveCategory("tumu")}
-            className={`px-5 py-2 text-[11px] uppercase tracking-[0.15em] border transition-colors duration-200 ${
-              activeCategory === "tumu"
-                ? "bg-[var(--color-black)] text-white border-[var(--color-black)]"
-                : "border-[var(--color-border)] text-[var(--color-gray)] hover:border-[var(--color-black)] hover:text-[var(--color-black)]"
-            }`}
-          >
-            Tümü
-          </button>
-          {categories.map((cat) => (
+      {/* ── Durum filtreleri ───────────────────────────── */}
+      <div className="flex flex-wrap gap-2 mb-10">
+        {statuses.map((status) => {
+          const isActive = activeStatus === status;
+          const label = status === "tumu" ? "Tümü" : (STATUS_LABELS[status] ?? status);
+          return (
             <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
+              key={status}
+              onClick={() => setActiveStatus(status)}
               className={`px-5 py-2 text-[11px] uppercase tracking-[0.15em] border transition-colors duration-200 ${
-                activeCategory === cat
+                isActive
                   ? "bg-[var(--color-black)] text-white border-[var(--color-black)]"
                   : "border-[var(--color-border)] text-[var(--color-gray)] hover:border-[var(--color-black)] hover:text-[var(--color-black)]"
               }`}
             >
-              {CATEGORY_LABELS[cat] ?? cat}
+              {label}
             </button>
-          ))}
-        </div>
-      )}
+          );
+        })}
+      </div>
 
       {/* ── Proje grid ───────────────────────────────────── */}
       {filtered.length === 0 ? (
         <p className="text-[var(--color-muted)] text-sm py-16 text-center">
-          Bu kategoride henüz proje eklenmemiş.
+          Bu grupta henüz proje bulunmuyor.
         </p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">

@@ -171,6 +171,14 @@ export const homePageType = defineType({
       group: "projects",
       initialValue: "Projelerimiz",
     }),
+    defineField({
+      name: "featuredProjects",
+      title: "Öne Çıkan Projeler",
+      type: "array",
+      group: "projects",
+      of: [{ type: "reference", to: [{ type: "project" }] }],
+      description: "Ana sayfada gösterilecek projeleri seçin ve sürükleyerek sıralayın. Seçilmezse en son eklenen 3 proje otomatik gösterilir. (Arayüz tasarımı gereği tam 3 adet seçilmesi önerilir).",
+    }),
 
     // ─── CTA Section ──────────────────────────────────────────
     defineField({

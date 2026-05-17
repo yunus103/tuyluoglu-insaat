@@ -48,6 +48,21 @@ export const projectType = defineType({
       description: "Projeler sayfasında filtreleme için kullanılır.",
     }),
     defineField({
+      name: "status",
+      title: "Proje Durumu",
+      type: "string",
+      options: {
+        list: [
+          { title: "Tamamlandı", value: "completed" },
+          { title: "Devam Ediyor", value: "ongoing" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "completed",
+      validation: (Rule) => Rule.required(),
+      description: "Projenin tamamlanıp tamamlanmadığını belirtir. Projeler sayfasında filtreleme için kullanılacaktır.",
+    }),
+    defineField({
       name: "location",
       title: "Konum",
       type: "string",
