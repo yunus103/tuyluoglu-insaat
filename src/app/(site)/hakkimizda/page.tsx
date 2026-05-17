@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import Image from "next/image";
+import { SanityImage } from "@/components/ui/SanityImage";
 import Link from "next/link";
 import { client } from "@/sanity/lib/client";
 import { aboutPageQuery, layoutQuery } from "@/sanity/lib/queries";
@@ -50,9 +50,6 @@ export default async function AboutPage() {
   const values = data?.values?.length ? data.values : FALLBACK_VALUES;
   const team   = data?.teamMembers?.length ? data.teamMembers : FALLBACK_TEAM;
 
-  const imageUrl = data?.mainImage?.asset?.url
-    ? urlForImage(data.mainImage)?.width(1000).height(1200).quality(80).url()
-    : null;
 
   return (
     <>
@@ -74,10 +71,9 @@ export default async function AboutPage() {
             {/* Görsel — sol */}
             <div className="lg:col-span-5 relative corner-accent">
               <div className="relative aspect-[3/4] lg:aspect-auto lg:h-[620px] overflow-hidden bg-[var(--color-surface)]">
-                {imageUrl ? (
-                  <Image
-                    src={imageUrl}
-                    alt={data?.mainImage?.alt || "Tüylüoğlu İnşaat hakkımızda"}
+                {data?.mainImage?.asset ? (
+                  <SanityImage
+                    image={data.mainImage}
                     fill
                     className="object-cover"
                     sizes="(max-width: 1024px) 100vw, 42vw"
@@ -206,10 +202,6 @@ export default async function AboutPage() {
             const founder = team.find((m: any) => m.isFounder) ?? team[0];
             const others  = team.filter((m: any) => m !== founder);
 
-            const founderPhotoUrl = founder?.photo?.asset?.url
-              ? urlForImage(founder.photo)?.width(800).height(1000).quality(85).url()
-              : null;
-
             return (
               <>
                 {/* ── Kurucu Spotlight ──────────────────────── */}
@@ -217,10 +209,9 @@ export default async function AboutPage() {
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 mb-12 md:mb-14 border border-[var(--color-border)]">
                     {/* Fotoğraf */}
                     <div className="lg:col-span-4 relative aspect-[4/5] lg:aspect-auto lg:h-[480px] bg-[var(--color-surface)] overflow-hidden">
-                      {founderPhotoUrl ? (
-                        <Image
-                          src={founderPhotoUrl}
-                          alt={founder.photo?.alt || founder.name}
+                      {founder?.photo?.asset ? (
+                        <SanityImage
+                          image={founder.photo}
                           fill
                           className="object-cover object-top"
                           sizes="(max-width: 1024px) 100vw, 33vw"

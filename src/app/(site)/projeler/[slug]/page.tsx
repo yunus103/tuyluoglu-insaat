@@ -10,6 +10,7 @@ import { urlForImage } from "@/sanity/lib/image";
 import { RichText } from "@/components/ui/RichText";
 import { LightboxGallery } from "@/components/ui/Lightbox";
 import { JsonLd, projectJsonLd } from "@/components/seo/JsonLd";
+import { SanityImage } from "@/components/ui/SanityImage";
 import { RiArrowLeftLine, RiArrowRightLine, RiMapPin2Line, RiCalendarLine, RiLayoutGridLine, RiCheckboxCircleLine } from "react-icons/ri";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -72,10 +73,6 @@ export default async function ProjectDetailPage({ params }: Props) {
     );
   }
 
-  const heroImageUrl = project.mainImage?.asset?.url
-    ? urlForImage(project.mainImage)?.width(1920).height(900).quality(80).url()
-    : null;
-
   const catLabel = project.category ? (CATEGORY_LABELS[project.category] ?? project.category) : null;
 
   return (
@@ -84,10 +81,9 @@ export default async function ProjectDetailPage({ params }: Props) {
 
       {/* ── Hero — Full viewport görsel ─────────────────────────── */}
       <section className="relative h-[55vh] md:h-[70vh] bg-[var(--color-black)] overflow-hidden">
-        {heroImageUrl && (
-          <Image
-            src={heroImageUrl}
-            alt={project.mainImage?.alt || project.title}
+        {project.mainImage?.asset && (
+          <SanityImage
+            image={project.mainImage}
             fill
             className="object-cover opacity-70"
             sizes="100vw"
@@ -270,23 +266,19 @@ export default async function ProjectDetailPage({ params }: Props) {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {relatedProjects.map((rp: any) => {
-                const rpImg = rp.mainImage?.asset?.url
-                  ? urlForImage(rp.mainImage)?.width(600).height(720).quality(80).url()
-                  : null;
                 return (
                   <Link
                     key={rp.slug?.current}
                     href={`/projeler/${rp.slug?.current}`}
                     className="group relative block overflow-hidden"
-                    style={{ aspectRatio: "5/6" }}
+                    style={{ aspectRatio: "3/4" }}
                   >
-                    {rpImg ? (
-                      <Image
-                        src={rpImg}
-                        alt={rp.mainImage?.alt || rp.title}
+                    {rp.mainImage?.asset ? (
+                      <SanityImage
+                        image={rp.mainImage}
                         fill
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        sizes="33vw"
+                        sizes="(max-width: 640px) 100vw, 33vw"
                       />
                     ) : (
                       <div className="absolute inset-0 bg-[var(--color-surface)]" />

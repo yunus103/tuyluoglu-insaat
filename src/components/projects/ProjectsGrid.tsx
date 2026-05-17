@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, useMemo } from "react";
 import { urlForImage } from "@/sanity/lib/image";
 import { RiArrowRightLine } from "react-icons/ri";
+import { SanityImage } from "@/components/ui/SanityImage";
 
 const CATEGORY_LABELS: Record<string, string> = {
   "konut":             "Konut",
@@ -71,9 +72,6 @@ export function ProjectsGrid({ projects }: ProjectsGridProps) {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
           {filtered.map((project: any) => {
-            const imgUrl = project.mainImage?.asset?.url
-              ? urlForImage(project.mainImage)?.width(700).height(840).quality(80).url()
-              : null;
             const catLabel = project.category ? (CATEGORY_LABELS[project.category] ?? project.category) : null;
 
             return (
@@ -83,11 +81,10 @@ export function ProjectsGrid({ projects }: ProjectsGridProps) {
                 className="group relative block overflow-hidden bg-[var(--color-surface)]"
               >
                 {/* Image */}
-                <div className="relative overflow-hidden" style={{ aspectRatio: "5/6" }}>
-                  {imgUrl ? (
-                    <Image
-                      src={imgUrl}
-                      alt={project.mainImage?.alt || project.title}
+                <div className="relative overflow-hidden" style={{ aspectRatio: "3/4" }}>
+                  {project.mainImage?.asset ? (
+                    <SanityImage
+                      image={project.mainImage}
                       fill
                       className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

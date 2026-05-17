@@ -6,6 +6,7 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { RiArrowRightLine } from "react-icons/ri";
 import { urlForImage } from "@/sanity/lib/image";
+import { SanityImage } from "@/components/ui/SanityImage";
 
 interface ProjectsSectionProps {
   data: {
@@ -27,10 +28,6 @@ function ProjectCard({
   inView?: boolean;
   delay?: number;
 }) {
-  const imgUrl = project?.mainImage?.asset?.url
-    ? urlForImage(project.mainImage)?.width(900).quality(82).url()
-    : null;
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 28 }}
@@ -42,10 +39,9 @@ function ProjectCard({
 
         {/* ── Full-bleed image ─────────────────────────────── */}
         <div className="absolute inset-0 bg-white/[0.03]">
-          {imgUrl ? (
-            <Image
-              src={imgUrl}
-              alt={project.title}
+          {project?.mainImage?.asset ? (
+            <SanityImage
+              image={project.mainImage}
               fill
               className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               sizes="(max-width: 768px) 100vw, 50vw"
