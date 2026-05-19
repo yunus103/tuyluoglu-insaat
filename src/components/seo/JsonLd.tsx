@@ -21,16 +21,27 @@ export function organizationJsonLd(settings: any) {
     url: base,
     logo: `${base}/images/logo/tuyluoglu-logo.png`,
     priceRange: "₺₺₺",
-    areaServed: { "@type": "Country", name: "Türkiye" },
-    ...(settings?.contactInfo?.phone && { telephone: settings.contactInfo.phone }),
-    ...(settings?.contactInfo?.email && { email: settings.contactInfo.email }),
-    ...(settings?.contactInfo?.address && {
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: settings.contactInfo.address,
-        addressCountry: "TR",
+    areaServed: [
+      {
+        "@type": "AdministrativeArea",
+        name: "Kadıköy",
+        containedInPlace: { "@type": "City", name: "İstanbul" },
       },
-    }),
+      {
+        "@type": "City",
+        name: "İstanbul",
+        containedInPlace: { "@type": "Country", name: "Türkiye" },
+      }
+    ],
+    telephone: settings?.contactInfo?.phone || "0533 923 3753",
+    ...(settings?.contactInfo?.email && { email: settings.contactInfo.email }),
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: settings?.contactInfo?.address || "19 Mayıs Mah Gürsoylu Sk NO: 2/1",
+      addressLocality: "Kadıköy",
+      addressRegion: "İstanbul",
+      addressCountry: "TR",
+    },
     sameAs: settings?.socialLinks?.map((s: any) => s.url).filter(Boolean) || [],
   };
 }

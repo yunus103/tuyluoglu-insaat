@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 import { client } from "@/sanity/lib/client";
 import { blogListQuery, blogCategoriesQuery, blogPageQuery } from "@/sanity/lib/queries";
 import { buildMetadata } from "@/lib/seo";
@@ -28,8 +29,19 @@ export default async function BlogListPage() {
   ]);
 
   const allPosts = posts || [];
-  const featured = allPosts[0] || null;
-  const rest     = allPosts.slice(1);
+
+  // 1. Öne çıkan yazıyı belirle (CMS'ten seçilen varsa onu kullan, yoksa fallback olarak en sonuncuyu al)
+  let featured = null;
+  if (pageData?.featuredPost?.slug?.current) {
+    featured = pageData.featuredPost;
+  } else {
+    featured = allPosts[0] || null;
+  }
+
+  // 2. Kalan yazılardan öne çıkanı filtrele (aynı yazı listede iki kere çıkmasın)
+  const rest = featured
+    ? allPosts.filter((post: any) => post.slug?.current !== featured.slug?.current)
+    : allPosts;
 
   return (
     <>
@@ -57,7 +69,9 @@ export default async function BlogListPage() {
 
           {/* ── Filtre + Grid ────────────────────────────────────── */}
           {rest.length > 0 && (
-            <BlogFilterClient posts={rest} categories={categories || []} />
+            <Suspense fallback={<div className="h-40 animate-pulse bg-[var(--color-surface)] border border-[var(--color-border)]" />}>
+              <BlogFilterClient posts={rest} categories={categories || []} />
+            </Suspense>
           )}
 
           {allPosts.length === 0 && (

@@ -12,6 +12,18 @@ export function formatDate(dateString: string, locale = "tr-TR"): string {
 }
 
 export function getSiteUrl(): string {
-  const url = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-  return url.replace(/\/$/, "");
+  let url = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  // Trim and remove trailing slashes
+  url = url.trim().replace(/\/+$/, "");
+  
+  // Ensure http or https prefix
+  if (!url.startsWith("http://") && !url.startsWith("https://")) {
+    // Determine if localhost to use http instead of https
+    if (url.includes("localhost")) {
+      url = `http://${url}`;
+    } else {
+      url = `https://${url}`;
+    }
+  }
+  return url;
 }

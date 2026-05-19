@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useMemo } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useMemo } from "react";
 import { urlForImage } from "@/sanity/lib/image";
 import { formatDate } from "@/lib/utils";
 import { RiArrowRightLine } from "react-icons/ri";
@@ -13,7 +14,22 @@ interface BlogFilterClientProps {
 }
 
 export function BlogFilterClient({ posts, categories }: BlogFilterClientProps) {
-  const [activeCategory, setActiveCategory] = useState<string>("tumu");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  // URL'deki category parametresini oku (varsayılan: "tumu")
+  const activeCategory = searchParams.get("category") || "tumu";
+
+  // Butona basıldığında URL parametresini güncelle
+  const handleCategoryChange = (slug: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (slug === "tumu") {
+      params.delete("category");
+    } else {
+      params.set("category", slug);
+    }
+    router.push(`/blog?${params.toString()}`, { scroll: false });
+  };
 
   const filtered = useMemo(() => {
     if (activeCategory === "tumu") return posts;
@@ -26,8 +42,8 @@ export function BlogFilterClient({ posts, categories }: BlogFilterClientProps) {
       {categories.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-10">
           <button
-            onClick={() => setActiveCategory("tumu")}
-            className={`px-5 py-2 text-[11px] uppercase tracking-[0.15em] border transition-colors duration-200 ${
+            onClick={() => handleCategoryChange("tumu")}
+            className={`cursor-pointer px-5 py-2 text-[11px] uppercase tracking-[0.15em] border transition-colors duration-200 ${
               activeCategory === "tumu"
                 ? "bg-[var(--color-black)] text-white border-[var(--color-black)]"
                 : "border-[var(--color-border)] text-[var(--color-gray)] hover:border-[var(--color-black)] hover:text-[var(--color-black)]"
@@ -38,8 +54,8 @@ export function BlogFilterClient({ posts, categories }: BlogFilterClientProps) {
           {categories.map((cat) => (
             <button
               key={cat._id}
-              onClick={() => setActiveCategory(cat.slug.current)}
-              className={`px-5 py-2 text-[11px] uppercase tracking-[0.15em] border transition-colors duration-200 ${
+              onClick={() => handleCategoryChange(cat.slug.current)}
+              className={`cursor-pointer px-5 py-2 text-[11px] uppercase tracking-[0.15em] border transition-colors duration-200 ${
                 activeCategory === cat.slug.current
                   ? "bg-[var(--color-black)] text-white border-[var(--color-black)]"
                   : "border-[var(--color-border)] text-[var(--color-gray)] hover:border-[var(--color-black)] hover:text-[var(--color-black)]"

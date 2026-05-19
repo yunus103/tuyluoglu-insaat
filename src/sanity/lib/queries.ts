@@ -92,7 +92,11 @@ export const contactPageQuery = groq`*[_type == "contactPage"][0] {
 export const blogPageQuery = groq`*[_type == "blogPage"][0] {
   heroTitle, heroSubtitle,
   pageTitle, pageSubtitle,
-  ctaLabel, ctaLink, seo
+  ctaLabel, ctaLink, seo,
+  featuredPost-> {
+    title, slug, excerpt, publishedAt, category->{ title, slug },
+    mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
+  }
 }`;
 
 // ─── Hizmetler Sayfası ────────────────────────────────────────────────────────
@@ -144,6 +148,16 @@ export const blogListByCategorySlugQuery = groq`*[_type == "blogPost" && categor
 export const blogRelatedPostsQuery = groq`*[_type == "blogPost" && category._ref == $categoryId && _id != $currentPostId] | order(publishedAt desc)[0...3] {
   title, slug, excerpt, publishedAt, category->{ title, slug },
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
+}`;
+
+// Sidebar sorguları
+export const sidebarProjectsQuery = groq`*[_type == "project"] | order(_createdAt desc)[0...3] {
+  _id, title, slug, location,
+  mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt }
+}`;
+
+export const sidebarServicesQuery = groq`*[_type == "service"] | order(_createdAt asc) {
+  _id, title, slug, serviceCategory
 }`;
 
 // ─── Hizmetler ─────────────────────────────────────────────────────────────────

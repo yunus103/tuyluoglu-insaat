@@ -2,13 +2,14 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { draftMode } from "next/headers";
 import { getClient, client } from "@/sanity/lib/client";
-import { blogPostBySlugQuery, blogListQuery, blogRelatedPostsQuery } from "@/sanity/lib/queries";
+import { blogPostBySlugQuery, blogListQuery, blogRelatedPostsQuery, sidebarProjectsQuery, sidebarServicesQuery } from "@/sanity/lib/queries";
 import { buildMetadata } from "@/lib/seo";
 import { RichText } from "@/components/ui/RichText";
 import { SanityImage } from "@/components/ui/SanityImage";
 import { JsonLd, articleJsonLd } from "@/components/seo/JsonLd";
 import { formatDate } from "@/lib/utils";
 import Link from "next/link";
+import { RiArrowRightLine } from "react-icons/ri";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -39,13 +40,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
   const isDraft = (await draftMode()).isEnabled;
-  const post = await getClient(isDraft).fetch(
-    blogPostBySlugQuery,
-    { slug },
-    { next: { tags: ["blog"] } }
-  );
+
+  // 1. Blog detay verisi ile birlikte son projeleri ve hizmetleri paralel olarak tek seferde çekelim (Performans için)
+  const [post, latestProjects, rawServices] = await Promise.all([
+    getClient(isDraft).fetch(blogPostBySlugQuery, { slug }, { next: { tags: ["blog"] } }),
+    client.fetch(sidebarProjectsQuery, {}, { next: { tags: ["projects"] } }),
+    client.fetch(sidebarServicesQuery, {}, { next: { tags: ["services"] } }),
+  ]);
 
   if (!post) notFound();
+
+  // 2. Hizmetleri "Önce İnşaat, Sonra Mimarlık" olarak sırala ve ilk 5 tanesini al
+  const sortedServices = [...(rawServices || [])]
+    .sort((a: any, b: any) => {
+      const catA = a.serviceCategory || "";
+      const catB = b.serviceCategory || "";
+      if (catA === "insaat" && catB !== "insaat") return -1;
+      if (catA !== "insaat" && catB === "insaat") return 1;
+      return 0;
+    })
+    .slice(0, 5);
 
   let relatedPosts: any[] = [];
   if (post.category?._id) {
@@ -150,8 +164,107 @@ export default async function BlogPostPage({ params }: Props) {
               )}
             </div>
 
-            {/* Sağ kolon — sidebar için boşluk */}
-            <div className="hidden lg:block lg:col-span-4" />
+            {/* ── Sağ Kolon: Sidebar ─────────────────────────────── */}
+            <aside className="lg:col-span-4 space-y-8 lg:sticky lg:top-28 w-full">
+              {/* 1. Sade ve Eylem Odaklı CTA Alanı */}
+              <div className="bg-[var(--color-black)] text-white p-6 md:p-8 relative overflow-hidden group border border-white/10">
+                <div className="absolute right-[-20px] bottom-[-20px] font-heading italic text-white/5 opacity-5 text-9xl pointer-events-none select-none">
+                  T
+                </div>
+                <h4 className="font-heading text-lg md:text-xl text-white mb-2 relative z-10 leading-snug">
+                  Projelerinizi Konuşalım
+                </h4>
+                <p className="text-xs text-white/70 mb-5 leading-relaxed relative z-10">
+                  Uzman ekibimizle hemen iletişime geçin, fikirlerinizi hayata geçirelim.
+                </p>
+                <Link
+                  href="/iletisim"
+                  className="group inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.15em] text-[var(--color-accent)] hover:text-white border-b border-[var(--color-accent)] hover:border-white pb-1 transition-all duration-300 relative z-10"
+                >
+                  Hemen İletişime Geç
+                  <RiArrowRightLine size={12} className="transition-transform group-hover:translate-x-1" />
+                </Link>
+              </div>
+
+              {/* 2. Son Projelerimiz Listesi (Ultra Optimize Edilmiş Görsel) */}
+              {latestProjects?.length > 0 && (
+                <div className="bg-[var(--color-surface)] p-6 md:p-8 border border-[var(--color-border)]">
+                  <div className="flex items-center gap-3 mb-6">
+                    <span className="accent-line" />
+                    <span className="text-[10px] uppercase tracking-[0.3em] text-[var(--color-muted)]">
+                      Son Projelerimiz
+                    </span>
+                  </div>
+                  <div className="space-y-5">
+                    {latestProjects.map((proj: any) => (
+                      <Link
+                        key={proj._id}
+                        href={`/projeler/${proj.slug?.current}`}
+                        className="group flex gap-4 items-center"
+                      >
+                        {/* Çok küçük, optimize edilmiş görsel (80x60px) */}
+                        <div className="relative w-16 h-12 shrink-0 bg-[var(--color-border)] overflow-hidden" style={{ aspectRatio: "4/3" }}>
+                          {proj.mainImage ? (
+                            <SanityImage
+                              image={proj.mainImage}
+                              width={80}
+                              height={60}
+                              sizes="80px"
+                              className="object-cover transition-transform duration-500 group-hover:scale-105"
+                            />
+                          ) : (
+                            <div className="absolute inset-0 flex items-center justify-center text-[10px] text-[var(--color-muted)] font-heading bg-[var(--color-surface)]">
+                              TİY
+                            </div>
+                          )}
+                        </div>
+                        {/* Bilgiler */}
+                        <div className="min-w-0">
+                          <h5 className="font-heading text-sm text-[var(--color-black)] group-hover:text-[var(--color-accent-dark)] transition-colors leading-snug line-clamp-1">
+                            {proj.title}
+                          </h5>
+                          {proj.location && (
+                            <span className="text-[9px] uppercase tracking-[0.15em] text-[var(--color-muted)] block mt-0.5">
+                              {proj.location}
+                            </span>
+                          )}
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* 3. Hizmetlerimiz Listesi (Önce İnşaat, Sonra Mimari) */}
+              {sortedServices?.length > 0 && (
+                <div className="bg-[var(--color-surface)] p-6 md:p-8 border border-[var(--color-border)]">
+                  <div className="flex items-center gap-3 mb-6">
+                    <span className="accent-line" />
+                    <span className="text-[10px] uppercase tracking-[0.3em] text-[var(--color-muted)]">
+                      Hizmetlerimiz
+                    </span>
+                  </div>
+                  <ul className="divide-y divide-[var(--color-border)]">
+                    {sortedServices.map((srv: any) => (
+                      <li key={srv._id}>
+                        <Link
+                          href={`/hizmetler/${srv.slug?.current}`}
+                          className="group flex items-center justify-between py-3 hover:text-[var(--color-accent-dark)] transition-colors duration-200"
+                        >
+                          <span className="font-heading text-[var(--color-black)] text-sm group-hover:text-[var(--color-accent-dark)] transition-colors duration-200 leading-snug">
+                            {srv.title}
+                          </span>
+                          <RiArrowRightLine
+                            size={12}
+                            className="text-[var(--color-muted)] shrink-0 ml-3 group-hover:text-[var(--color-accent)] group-hover:translate-x-0.5 transition-all duration-200"
+                          />
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </aside>
           </div>
         </div>
       </article>

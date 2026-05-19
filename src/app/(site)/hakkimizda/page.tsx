@@ -204,54 +204,43 @@ export default async function AboutPage() {
 
             return (
               <>
-                {/* ── Kurucu Spotlight ──────────────────────── */}
+                {/* ── Kurucu Spotlight (Fotoğrafsız Yeni Tasarım) ──────────────────────── */}
                 {founder && (
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 mb-12 md:mb-14 border border-[var(--color-border)]">
-                    {/* Fotoğraf */}
-                    <div className="lg:col-span-4 relative aspect-[4/5] lg:aspect-auto lg:h-[480px] bg-[var(--color-surface)] overflow-hidden">
-                      {founder?.photo?.asset ? (
-                        <SanityImage
-                          image={founder.photo}
-                          fill
-                          className="object-cover object-top"
-                          sizes="(max-width: 1024px) 100vw, 33vw"
-                        />
-                      ) : (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span
-                            className="font-heading italic text-[var(--color-muted)] opacity-20 select-none"
-                            style={{ fontSize: "8rem" }}
-                          >
-                            {founder.name?.charAt(0) || "?"}
-                          </span>
-                        </div>
-                      )}
-                      {/* Accent overlay bottom stripe */}
-                      <div className="absolute bottom-0 left-0 right-0 h-1 bg-[var(--color-accent)]" />
+                  <div className="mb-16 border border-[var(--color-border)] bg-white p-8 md:p-16 relative overflow-hidden group hover:border-[var(--color-accent)] transition-all duration-300">
+                    {/* Arka planda devasa, soluk bir baş harf (Sanatsal Dokunuş) */}
+                    <div className="absolute right-10 bottom-[-20px] font-heading italic text-[var(--color-muted)] opacity-[0.03] text-[20rem] pointer-events-none select-none">
+                      {founder.name?.charAt(0) || "T"}
                     </div>
 
-                    {/* Metin */}
-                    <div className="lg:col-span-8 flex flex-col justify-center px-8 md:px-12 py-10 md:py-14 bg-white">
-                      {/* "Kurucu" rozeti */}
-                      <span className="inline-flex items-center gap-2 mb-6 self-start">
-                        <span className="w-5 h-px bg-[var(--color-accent)]" />
-                        <span className="text-[10px] uppercase tracking-[0.25em] text-[var(--color-accent)]">
-                          Firma Sahibi
+                    <div className="flex flex-col md:flex-row md:items-start gap-8 md:gap-12 relative z-10">
+                      {/* Sol Taraf: Büyük ve Şık Monogram/İnisiyal */}
+                      <div className="shrink-0 flex items-center justify-center w-20 h-20 md:w-24 md:h-24 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-full text-2xl md:text-3xl font-heading text-[var(--color-muted)] group-hover:border-[var(--color-accent)] group-hover:text-[var(--color-accent)] transition-colors duration-300">
+                        {founder.name?.split(" ").map((n: string) => n[0]).slice(0, 2).join("") || "?"}
+                      </div>
+
+                      {/* Sağ Taraf: Metin İçeriği */}
+                      <div className="flex-1 flex flex-col justify-center">
+                        {/* Rozet */}
+                        <span className="inline-flex items-center gap-2 mb-4 self-start">
+                          <span className="w-5 h-px bg-[var(--color-accent)]" />
+                          <span className="text-[10px] uppercase tracking-[0.25em] text-[var(--color-accent)]">
+                            Firma Sahibi
+                          </span>
                         </span>
-                      </span>
 
-                      <h3 className="font-heading text-[var(--color-black)] text-3xl md:text-4xl leading-tight mb-2">
-                        {founder.name}
-                      </h3>
-                      <p className="text-[11px] uppercase tracking-[0.2em] text-[var(--color-muted)] mb-6">
-                        {founder.role}
-                      </p>
-
-                      {founder.shortBio && (
-                        <p className="text-[var(--color-gray)] leading-relaxed text-base max-w-lg border-l-2 border-[var(--color-accent)] pl-5">
-                          {founder.shortBio}
+                        <h3 className="font-heading text-[var(--color-black)] text-3xl md:text-4xl leading-tight mb-2">
+                          {founder.name}
+                        </h3>
+                        <p className="text-[11px] uppercase tracking-[0.2em] text-[var(--color-muted)] mb-6">
+                          {founder.role}
                         </p>
-                      )}
+
+                        {founder.shortBio && (
+                          <div className="relative pl-6 border-l-2 border-[var(--color-accent)] text-[var(--color-gray)] leading-relaxed text-base max-w-2xl">
+                            <p>{founder.shortBio}</p>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 )}
