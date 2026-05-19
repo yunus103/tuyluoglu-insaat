@@ -148,7 +148,6 @@ export function ProjectsSection({ data }: ProjectsSectionProps) {
               <ProjectCard
                 project={p1}
                 className="md:row-span-2 min-h-[400px] md:min-h-[680px]"
-                priority
                 inView={inView}
                 delay={0}
               />

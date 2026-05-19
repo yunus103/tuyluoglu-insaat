@@ -5,7 +5,7 @@ import { Suspense } from "react";
 import { client } from "@/sanity/lib/client";
 import { blogListQuery, blogCategoriesQuery, blogPageQuery } from "@/sanity/lib/queries";
 import { buildMetadata } from "@/lib/seo";
-import { urlForImage } from "@/sanity/lib/image";
+import { SanityImage } from "@/components/ui/SanityImage";
 import { PageHero } from "@/components/ui/PageHero";
 import { BlogFilterClient } from "@/components/blog/BlogFilterClient";
 import { formatDate } from "@/lib/utils";
@@ -86,10 +86,6 @@ export default async function BlogListPage() {
 }
 
 function FeaturedPostCard({ post }: { post: any }) {
-  const imgUrl = post.mainImage?.asset?.url
-    ? urlForImage(post.mainImage)?.width(1200).height(600).quality(80).url()
-    : null;
-
   return (
     <Link
       href={`/${post.slug?.current}`}
@@ -97,10 +93,9 @@ function FeaturedPostCard({ post }: { post: any }) {
     >
       {/* Görsel */}
       <div className="relative overflow-hidden bg-[var(--color-surface)]" style={{ aspectRatio: "16/9" }}>
-        {imgUrl ? (
-          <Image
-            src={imgUrl}
-            alt={post.mainImage?.alt || post.title}
+        {post.mainImage?.asset ? (
+          <SanityImage
+            image={post.mainImage}
             fill
             className="object-cover transition-transform duration-600 group-hover:scale-105"
             sizes="(max-width: 1024px) 100vw, 50vw"

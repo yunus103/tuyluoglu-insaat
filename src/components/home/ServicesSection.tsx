@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState, useMemo } from "react";
 import { RiArrowRightLine } from "react-icons/ri";
-import { urlForImage } from "@/sanity/lib/image";
+import { SanityImage } from "@/components/ui/SanityImage";
 
 const FALLBACK_INSAAT = [
   { _id: "f1", title: "Kentsel Dönüşüm", excerpt: "Riskli yapıların yıkım ve yeniden inşa süreçlerini uçtan uca yönetiyoruz.", serviceCategory: "insaat", slug: { current: "kentsel-donusum" }, mainImage: null },
@@ -51,16 +51,15 @@ export function ServicesSection({ data }: ServicesSectionProps) {
 
   const activeServices = (grouped[activeTab].length ? grouped[activeTab] : (activeTab === "insaat" ? FALLBACK_INSAAT : FALLBACK_MIMARLIK));
 
-  // Resolve representative image: tab-specific first, then fallback to first service image
-  const representativeImg = useMemo(() => {
+  // Resolve representative image object
+  const representativeImageObj = useMemo(() => {
     const tabImg = activeTab === "insaat" ? data?.insaatTabImage : data?.mimarlikTabImage;
-    if (tabImg?.asset?.url) {
-      return urlForImage(tabImg)?.width(900).height(1100).quality(80).url() ?? null;
+    if (tabImg?.asset) {
+      return tabImg;
     }
     // Fallback: first service in active tab that has an image
-    const withImg = activeServices.find((s: any) => s.mainImage?.asset?.url);
-    if (!withImg) return null;
-    return urlForImage(withImg.mainImage)?.width(900).height(1100).quality(80).url() ?? null;
+    const withImg = activeServices.find((s: any) => s.mainImage?.asset);
+    return withImg?.mainImage ?? null;
   }, [activeTab, activeServices, data?.insaatTabImage, data?.mimarlikTabImage]);
 
   return (
@@ -125,10 +124,9 @@ export function ServicesSection({ data }: ServicesSectionProps) {
             {/* Left: image panel */}
             <div className="lg:col-span-5 relative">
               <div className="relative aspect-[3/4] lg:aspect-auto lg:h-full min-h-[400px] lg:min-h-[500px] overflow-hidden bg-white/5">
-                {representativeImg ? (
-                  <Image
-                    src={representativeImg}
-                    alt={activeTab === "insaat" ? "İnşaat hizmetleri" : "Mimarlık hizmetleri"}
+                {representativeImageObj ? (
+                  <SanityImage
+                    image={representativeImageObj}
                     fill
                     className="object-cover"
                     sizes="(max-width: 1024px) 100vw, 42vw"

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { RiArrowDownLine } from "react-icons/ri";
-import { urlForImage } from "@/sanity/lib/image";
+import { SanityImage } from "@/components/ui/SanityImage";
 
 interface HeroSectionProps {
   data: {
@@ -22,11 +22,6 @@ export function HeroSection({ data }: HeroSectionProps) {
   const ctaLabel = data?.heroCtaLabel || "Projelerimizi İnceleyin";
   const ctaLink  = data?.heroCtaLink  || "/projeler";
 
-  // Poster URL — slightly lower quality for faster initial paint
-  const posterUrl = data?.heroPosterImage?.asset?.url
-    ? urlForImage(data.heroPosterImage)?.width(1600).quality(70).url() ?? undefined
-    : undefined;
-
   // Ensure muted autoplay on all browsers (especially iOS Safari)
   useEffect(() => {
     const video = videoRef.current;
@@ -39,15 +34,14 @@ export function HeroSection({ data }: HeroSectionProps) {
     <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
 
       {/* ── Background: poster only (no video URL) ─────────────── */}
-      {posterUrl && !data?.heroVideoUrl && (
+      {data?.heroPosterImage && !data?.heroVideoUrl && (
         <div className="absolute inset-0">
-          <Image
-            src={posterUrl}
-            alt="Hero background"
+          <SanityImage
+            image={data.heroPosterImage}
             fill
             className="object-cover"
             priority
-            quality={85}
+            sizes="100vw"
           />
         </div>
       )}
@@ -74,15 +68,13 @@ export function HeroSection({ data }: HeroSectionProps) {
       )}
 
       {/* ── Poster overlay while video buffers ─────────────────── */}
-      {data?.heroVideoUrl && posterUrl && !videoReady && (
+      {data?.heroVideoUrl && data?.heroPosterImage && !videoReady && (
         <div className="absolute inset-0">
-          <Image
-            src={posterUrl}
-            alt="Hero background"
+          <SanityImage
+            image={data.heroPosterImage}
             fill
             className="object-cover"
             priority
-            quality={85}
             sizes="100vw"
           />
         </div>

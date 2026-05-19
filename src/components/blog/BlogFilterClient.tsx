@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useMemo } from "react";
-import { urlForImage } from "@/sanity/lib/image";
+import { SanityImage } from "@/components/ui/SanityImage";
 import { formatDate } from "@/lib/utils";
 import { RiArrowRightLine } from "react-icons/ri";
 
@@ -84,10 +84,6 @@ export function BlogFilterClient({ posts, categories }: BlogFilterClientProps) {
 }
 
 function BlogPostCard({ post }: { post: any }) {
-  const imgUrl = post.mainImage?.asset?.url
-    ? urlForImage(post.mainImage)?.width(700).height(470).quality(80).url()
-    : null;
-
   return (
     <Link
       href={`/${post.slug?.current}`}
@@ -95,10 +91,9 @@ function BlogPostCard({ post }: { post: any }) {
     >
       {/* Görsel */}
       <div className="relative overflow-hidden bg-[var(--color-surface)] mb-5" style={{ aspectRatio: "3/2" }}>
-        {imgUrl ? (
-          <Image
-            src={imgUrl}
-            alt={post.mainImage?.alt || post.title}
+        {post.mainImage?.asset ? (
+          <SanityImage
+            image={post.mainImage}
             fill
             className="object-cover transition-transform duration-600 group-hover:scale-105"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

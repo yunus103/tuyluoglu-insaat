@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { RiArrowRightLine } from "react-icons/ri";
-import { urlForImage } from "@/sanity/lib/image";
+import { SanityImage } from "@/components/ui/SanityImage";
 
 interface AboutSectionProps {
   data: {
@@ -30,9 +30,6 @@ export function AboutSection({ data }: AboutSectionProps) {
   const title = data?.aboutTitle || "1985'ten Beri Güven";
   const text  = data?.aboutText  || "Tüylüoğlu İnşaat olarak 1985'ten bu yana güvenli ve kaliteli yapılar inşa ediyoruz. Konut, ticari ve kentsel dönüşüm projelerinde edindiğimiz derin tecrübe ile her projeyi titizlikle teslim ediyoruz.";
   const stats = data?.stats?.length ? data.stats : FALLBACK_STATS;
-  const imageUrl = data?.aboutImage?.asset?.url
-    ? urlForImage(data.aboutImage)?.width(1000).quality(80).url()
-    : null;
 
   return (
     <section className="bg-white">
@@ -49,10 +46,9 @@ export function AboutSection({ data }: AboutSectionProps) {
             className="lg:col-span-7 relative corner-accent"
           >
             <div className="relative aspect-[3/4] sm:aspect-[4/5] lg:aspect-auto lg:h-[600px] overflow-hidden bg-[var(--color-surface)]">
-              {imageUrl ? (
-                <Image
-                  src={imageUrl}
-                  alt={data?.aboutImage?.alt || "Tüylüoğlu İnşaat hakkımızda"}
+              {data?.aboutImage?.asset ? (
+                <SanityImage
+                  image={data.aboutImage}
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 58vw"

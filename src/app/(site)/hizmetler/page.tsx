@@ -4,7 +4,7 @@ import Link from "next/link";
 import { client } from "@/sanity/lib/client";
 import { servicesPageQuery, serviceListQuery, layoutQuery } from "@/sanity/lib/queries";
 import { buildMetadata } from "@/lib/seo";
-import { urlForImage } from "@/sanity/lib/image";
+import { SanityImage } from "@/components/ui/SanityImage";
 import { PageHero } from "@/components/ui/PageHero";
 import { JsonLd, serviceListJsonLd } from "@/components/seo/JsonLd";
 import { RiArrowRightLine } from "react-icons/ri";
@@ -114,9 +114,6 @@ function ServiceGrid({ services }: { services: any[] }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
       {services.map((service: any) => {
-        const imgUrl = service.mainImage?.asset?.url
-          ? urlForImage(service.mainImage)?.width(700).height(530).quality(80).url()
-          : null;
         return (
           <Link
             key={service.slug?.current}
@@ -125,10 +122,9 @@ function ServiceGrid({ services }: { services: any[] }) {
           >
             {/* Image */}
             <div className="relative overflow-hidden" style={{ aspectRatio: "4/3" }}>
-              {imgUrl ? (
-                <Image
-                  src={imgUrl}
-                  alt={service.mainImage?.alt || service.title}
+              {service.mainImage?.asset ? (
+                <SanityImage
+                  image={service.mainImage}
                   fill
                   className="object-cover transition-transform duration-600 group-hover:scale-105"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

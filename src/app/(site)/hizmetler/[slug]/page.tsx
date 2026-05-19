@@ -7,7 +7,7 @@ import { getClient, client } from "@/sanity/lib/client";
 import { serviceBySlugQuery, serviceListQuery, layoutQuery } from "@/sanity/lib/queries";
 import { buildMetadata } from "@/lib/seo";
 import { getSiteUrl } from "@/lib/utils";
-import { urlForImage } from "@/sanity/lib/image";
+import { SanityImage } from "@/components/ui/SanityImage";
 import { PageHero } from "@/components/ui/PageHero";
 import { RichText } from "@/components/ui/RichText";
 import { FAQ } from "@/components/ui/FAQ";
@@ -53,10 +53,6 @@ export default async function ServiceDetailPage({ params }: Props) {
     (s: any) => s.slug?.current !== slug
   );
 
-  const imageUrl = service.mainImage?.asset?.url
-    ? urlForImage(service.mainImage)?.width(1200).height(675).quality(80).url()
-    : null;
-
   const siteBase = getSiteUrl();
 
   return (
@@ -92,12 +88,11 @@ export default async function ServiceDetailPage({ params }: Props) {
             <article className="lg:col-span-8 min-w-0">
 
               {/* Öne çıkan görsel */}
-              {imageUrl && (
+              {service.mainImage?.asset && (
                 <div className="relative w-full overflow-hidden mb-10 md:mb-14 bg-[var(--color-surface)]"
                   style={{ aspectRatio: "16/9" }}>
-                  <Image
-                    src={imageUrl}
-                    alt={service.mainImage?.alt || service.title}
+                  <SanityImage
+                    image={service.mainImage}
                     fill
                     className="object-cover"
                     sizes="(max-width: 1024px) 100vw, 66vw"
