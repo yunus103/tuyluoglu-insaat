@@ -43,7 +43,7 @@ function ProjectCard({
             <SanityImage
               image={project.mainImage}
               fill
-              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105 max-md:!object-top"
               sizes="(max-width: 768px) 100vw, 50vw"
               priority={priority}
             />
@@ -98,8 +98,8 @@ export function ProjectsSection({ data }: ProjectsSectionProps) {
     <section className="bg-[#111111] overflow-hidden">
       <div ref={ref} className="site-container py-20 md:py-28 lg:py-36">
 
-        {/* ── Header row: title left, pill button right ───────── */}
-        <div className="flex items-end justify-between mb-12 md:mb-16 gap-6">
+        {/* ── Header row: title ───────── */}
+        <div className="mb-12 md:mb-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -114,63 +114,66 @@ export function ProjectsSection({ data }: ProjectsSectionProps) {
               {line2 && <span className="block italic text-white/70">{line2}</span>}
             </h2>
           </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.15 }}
-            className="shrink-0"
-          >
-            <Link
-              href="/projeler"
-              className="group inline-flex items-center gap-0 border border-white/30 rounded-full overflow-hidden text-[11px] uppercase tracking-[0.15em] hover:bg-white transition-colors duration-300"
-            >
-              <span className="pl-7 pr-3 py-3.5 text-white group-hover:text-[var(--color-black)] transition-colors duration-300">
-                Tümünü Gör
-              </span>
-              <span className="flex items-center justify-center w-10 h-10 bg-white text-[var(--color-black)] rounded-full mr-1 group-hover:bg-[var(--color-black)] group-hover:text-white transition-colors duration-300">
-                <RiArrowRightLine size={15} />
-              </span>
-            </Link>
-          </motion.div>
         </div>
 
-        {/* ── Project grid ──────────────────────────────────────── */}
+        {/* ── Project grid & Bottom button ───────────────────────── */}
         {projects.length === 0 ? (
           <div className="text-center py-20 text-white/30 text-sm">
             Henüz proje eklenmemiş. Sanity Studio&apos;dan proje ekleyebilirsiniz.
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
 
-            {/* Left: 1 tall featured card */}
-            {p1 && (
-              <ProjectCard
-                project={p1}
-                className="md:row-span-2 min-h-[400px] md:min-h-[680px]"
-                inView={inView}
-                delay={0}
-              />
-            )}
+              {/* Left: 1 tall featured card */}
+              {p1 && (
+                <ProjectCard
+                  project={p1}
+                  className="md:row-span-2 min-h-[400px] md:min-h-[680px]"
+                  inView={inView}
+                  delay={0}
+                />
+              )}
 
-            {/* Right: 2 stacked cards */}
-            {p2 && (
-              <ProjectCard
-                project={p2}
-                className="min-h-[300px] md:min-h-[330px]"
-                inView={inView}
-                delay={0.12}
-              />
-            )}
-            {p3 && (
-              <ProjectCard
-                project={p3}
-                className="min-h-[300px] md:min-h-[330px]"
-                inView={inView}
-                delay={0.22}
-              />
-            )}
-          </div>
+              {/* Right: 2 stacked cards */}
+              {p2 && (
+                <ProjectCard
+                  project={p2}
+                  className="min-h-[400px] md:min-h-[330px]"
+                  inView={inView}
+                  delay={0.12}
+                />
+              )}
+              {p3 && (
+                <ProjectCard
+                  project={p3}
+                  className="min-h-[400px] md:min-h-[330px]"
+                  inView={inView}
+                  delay={0.22}
+                />
+              )}
+            </div>
+
+            {/* ── Bottom button: Tümünü Gör ───────── */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: 0.3 }}
+              className="flex justify-center mt-12 md:mt-16"
+            >
+              <Link
+                href="/projeler"
+                className="group inline-flex items-center gap-0 border border-white/30 rounded-full overflow-hidden text-[11px] uppercase tracking-[0.15em] hover:bg-white transition-colors duration-300"
+              >
+                <span className="pl-7 pr-3 py-3.5 text-white group-hover:text-[var(--color-black)] transition-colors duration-300">
+                  Tümünü Gör
+                </span>
+                <span className="flex items-center justify-center w-10 h-10 bg-white text-[var(--color-black)] rounded-full mr-1 group-hover:bg-[var(--color-black)] group-hover:text-white transition-colors duration-300">
+                  <RiArrowRightLine size={15} />
+                </span>
+              </Link>
+            </motion.div>
+          </>
         )}
       </div>
     </section>
