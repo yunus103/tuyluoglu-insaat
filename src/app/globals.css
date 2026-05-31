@@ -179,6 +179,12 @@
     height: auto;
   }
 
+  /* Hide iOS Safari native play button overlay on paused autoplay videos */
+  video::-webkit-media-controls-start-playback-button {
+    display: none !important;
+    -webkit-appearance: none;
+  }
+
   ::selection {
     background-color: var(--color-accent);
     color: #ffffff;

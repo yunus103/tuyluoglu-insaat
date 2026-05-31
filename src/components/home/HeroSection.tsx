@@ -29,10 +29,13 @@ export function HeroSection({ data }: HeroSectionProps) {
 
     // Explicitly set muted and playsinline to satisfy browser policies
     video.muted = true;
+    video.defaultMuted = true;
     video.playsInline = true;
+    video.setAttribute("webkit-playsinline", "true");
+    video.setAttribute("playsinline", "true");
 
-    // Safety Check 1: If the video is already ready to play (e.g. from cache or fast load)
-    if (video.readyState >= 3) {
+    // Safety Check 1: If the video is already ready and playing (e.g. from cache or fast load)
+    if (video.readyState >= 3 && !video.paused) {
       requestAnimationFrame(() => {
         setVideoReady(true);
       });
@@ -43,7 +46,9 @@ export function HeroSection({ data }: HeroSectionProps) {
     if (playPromise !== undefined) {
       playPromise
         .then(() => {
-          setVideoReady(true);
+          if (!video.paused) {
+            setVideoReady(true);
+          }
         })
         .catch((error) => {
           console.warn("Autoplay was prevented by browser policies:", error);
@@ -80,12 +85,12 @@ export function HeroSection({ data }: HeroSectionProps) {
           muted
           loop
           playsInline
+          webkit-playsinline="true"
           preload="auto"
           // @ts-expect-error — fetchPriority is valid HTML but not yet in React types
           fetchPriority="high"
-          onLoadedData={() => setVideoReady(true)}
-          onCanPlay={() => setVideoReady(true)}
           onPlay={() => setVideoReady(true)}
+          onPlaying={() => setVideoReady(true)}
         >
           <source src={data.heroVideoUrl} type="video/mp4" />
         </video>
