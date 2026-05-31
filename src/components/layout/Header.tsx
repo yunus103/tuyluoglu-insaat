@@ -28,6 +28,8 @@ export function Header({ settings, navigation }: { settings: any; navigation: an
   const isHomePage = pathname === "/";
   const isTransparent = isHomePage && !scrolled && !drawerOpen;
 
+  const logoSrc = settings?.logo?.asset?.url || "/images/logo/tuyluoglu-logo.png";
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     onScroll(); // initial check
@@ -91,7 +93,7 @@ export function Header({ settings, navigation }: { settings: any; navigation: an
             <Link href="/" className="flex-shrink-0 md:mx-6 lg:mx-10" aria-label="Ana Sayfa">
               <div className="relative h-10 w-36 md:h-16 md:w-64 lg:h-16 lg:w-72">
                 <Image
-                  src="/images/logo/tuyluoglu-logo.png"
+                  src={logoSrc}
                   alt={settings?.siteName || "Tüylüoğlu İnşaat"}
                   fill
                   className="object-contain object-center"
@@ -152,7 +154,7 @@ export function Header({ settings, navigation }: { settings: any; navigation: an
               <div className="flex items-center justify-between px-6 py-5">
                 <div className="relative h-8 w-32">
                   <Image
-                    src="/images/logo/tuyluoglu-logo.png"
+                    src={logoSrc}
                     alt={settings?.siteName || "Logo"}
                     fill
                     className="object-contain object-left"
