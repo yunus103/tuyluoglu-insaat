@@ -67,7 +67,23 @@ export const blogPostType = defineType({
                     },
                   },
                 ],
-              }
+              },
+              {
+                name: "link",
+                type: "object",
+                title: "Bağlantı (Link)",
+                fields: [
+                  {
+                    name: "href",
+                    type: "url",
+                    title: "URL / Adres",
+                    validation: (Rule) => Rule.uri({
+                      allowRelative: true,
+                      scheme: ["http", "https", "mailto", "tel"]
+                    }),
+                  },
+                ],
+              },
             ]
           }
         },
