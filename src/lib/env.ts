@@ -15,7 +15,7 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_SANITY_PROJECT_ID: z.string().min(1),
     NEXT_PUBLIC_SANITY_DATASET: z.string().min(1),
-    NEXT_PUBLIC_SITE_URL: z.string().url(),
+    NEXT_PUBLIC_SITE_URL: z.string().min(1),
   },
   runtimeEnv: {
     SANITY_API_READ_TOKEN: process.env.SANITY_API_READ_TOKEN,

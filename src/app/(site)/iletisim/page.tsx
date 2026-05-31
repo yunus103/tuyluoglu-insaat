@@ -4,7 +4,8 @@ import { client } from "@/sanity/lib/client";
 import { contactPageQuery, layoutQuery } from "@/sanity/lib/queries";
 import { buildMetadata } from "@/lib/seo";
 import { PageHero } from "@/components/ui/PageHero";
-import { JsonLd, contactPageJsonLd } from "@/components/seo/JsonLd";
+import { JsonLd, contactPageJsonLd, breadcrumbJsonLd } from "@/components/seo/JsonLd";
+import { getSiteUrl } from "@/lib/utils";
 import {
   RiPhoneLine, RiMailLine, RiMapPin2Line, RiTimeLine,
   RiInstagramLine, RiFacebookLine, RiLinkedinLine, RiYoutubeLine,
@@ -37,9 +38,16 @@ export default async function ContactPage() {
   const socialLinks = settings?.socialLinks || [];
   const mapIframe   = settings?.contactInfo?.mapIframe;
 
+  const siteBase = getSiteUrl();
+
   return (
     <>
       <JsonLd data={contactPageJsonLd(settings)} />
+      <JsonLd
+        data={breadcrumbJsonLd(siteBase, [
+          { name: "İletişim", href: "/iletisim" },
+        ])}
+      />
 
       {/* ── PageHero ──────────────────────────────────────────────── */}
       <PageHero

@@ -23,14 +23,54 @@ export function organizationJsonLd(settings: any) {
     priceRange: "₺₺₺",
     areaServed: [
       {
+        "@type": "City",
+        name: "İstanbul",
+        containedInPlace: { "@type": "Country", name: "Türkiye" },
+      },
+      {
         "@type": "AdministrativeArea",
         name: "Kadıköy",
         containedInPlace: { "@type": "City", name: "İstanbul" },
       },
       {
-        "@type": "City",
-        name: "İstanbul",
-        containedInPlace: { "@type": "Country", name: "Türkiye" },
+        "@type": "AdministrativeArea",
+        name: "Bağdat Caddesi",
+        containedInPlace: { "@type": "AdministrativeArea", name: "Kadıköy" },
+      },
+      {
+        "@type": "AdministrativeArea",
+        name: "Erenköy",
+        containedInPlace: { "@type": "AdministrativeArea", name: "Kadıköy" },
+      },
+      {
+        "@type": "AdministrativeArea",
+        name: "Suadiye",
+        containedInPlace: { "@type": "AdministrativeArea", name: "Kadıköy" },
+      },
+      {
+        "@type": "AdministrativeArea",
+        name: "Kozyatağı",
+        containedInPlace: { "@type": "AdministrativeArea", name: "Kadıköy" },
+      },
+      {
+        "@type": "AdministrativeArea",
+        name: "Bostancı",
+        containedInPlace: { "@type": "AdministrativeArea", name: "Kadıköy" },
+      },
+      {
+        "@type": "AdministrativeArea",
+        name: "Göztepe",
+        containedInPlace: { "@type": "AdministrativeArea", name: "Kadıköy" },
+      },
+      {
+        "@type": "AdministrativeArea",
+        name: "Caddebostan",
+        containedInPlace: { "@type": "AdministrativeArea", name: "Kadıköy" },
+      },
+      {
+        "@type": "AdministrativeArea",
+        name: "Feneryolu",
+        containedInPlace: { "@type": "AdministrativeArea", name: "Kadıköy" },
       }
     ],
     telephone: settings?.contactInfo?.phone || "0533 923 3753",
@@ -109,15 +149,55 @@ export function singleServiceJsonLd(settings: any, service: any) {
     ...(service?.serviceCategory && { serviceType: CATEGORY_LABELS[service.serviceCategory] }),
     areaServed: [
       {
+        "@type": "City",
+        name: "İstanbul",
+        containedInPlace: { "@type": "Country", name: "Türkiye" },
+      },
+      {
         "@type": "AdministrativeArea",
         name: "Kadıköy",
         containedInPlace: { "@type": "City", name: "İstanbul" },
       },
       {
-        "@type": "City",
-        name: "İstanbul",
-        containedInPlace: { "@type": "Country", name: "Türkiye" },
+        "@type": "AdministrativeArea",
+        name: "Bağdat Caddesi",
+        containedInPlace: { "@type": "AdministrativeArea", name: "Kadıköy" },
       },
+      {
+        "@type": "AdministrativeArea",
+        name: "Erenköy",
+        containedInPlace: { "@type": "AdministrativeArea", name: "Kadıköy" },
+      },
+      {
+        "@type": "AdministrativeArea",
+        name: "Suadiye",
+        containedInPlace: { "@type": "AdministrativeArea", name: "Kadıköy" },
+      },
+      {
+        "@type": "AdministrativeArea",
+        name: "Kozyatağı",
+        containedInPlace: { "@type": "AdministrativeArea", name: "Kadıköy" },
+      },
+      {
+        "@type": "AdministrativeArea",
+        name: "Bostancı",
+        containedInPlace: { "@type": "AdministrativeArea", name: "Kadıköy" },
+      },
+      {
+        "@type": "AdministrativeArea",
+        name: "Göztepe",
+        containedInPlace: { "@type": "AdministrativeArea", name: "Kadıköy" },
+      },
+      {
+        "@type": "AdministrativeArea",
+        name: "Caddebostan",
+        containedInPlace: { "@type": "AdministrativeArea", name: "Kadıköy" },
+      },
+      {
+        "@type": "AdministrativeArea",
+        name: "Feneryolu",
+        containedInPlace: { "@type": "AdministrativeArea", name: "Kadıköy" },
+      }
     ],
     provider: {
       "@type": "ConstructionCompany",

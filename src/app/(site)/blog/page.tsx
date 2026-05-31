@@ -8,7 +8,8 @@ import { buildMetadata } from "@/lib/seo";
 import { SanityImage } from "@/components/ui/SanityImage";
 import { PageHero } from "@/components/ui/PageHero";
 import { BlogFilterClient } from "@/components/blog/BlogFilterClient";
-import { formatDate } from "@/lib/utils";
+import { JsonLd, breadcrumbJsonLd } from "@/components/seo/JsonLd";
+import { formatDate, getSiteUrl } from "@/lib/utils";
 import { RiArrowRightLine } from "react-icons/ri";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -43,8 +44,15 @@ export default async function BlogListPage() {
     ? allPosts.filter((post: any) => post.slug?.current !== featured.slug?.current)
     : allPosts;
 
+  const siteBase = getSiteUrl();
+
   return (
     <>
+      <JsonLd
+        data={breadcrumbJsonLd(siteBase, [
+          { name: "Blog", href: "/blog" },
+        ])}
+      />
       {/* ── PageHero ──────────────────────────────────────────────── */}
       <PageHero
         eyebrow="Blog"

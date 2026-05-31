@@ -97,7 +97,7 @@ export function HeroSection({ data }: HeroSectionProps) {
       {/* ── Center content (z-30) ────────────────────────── */}
       <div className="relative z-30 flex flex-col items-center justify-center text-center px-6">
         {/* Logo */}
-        <motion.div
+        <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: "easeOut" }}
@@ -112,7 +112,8 @@ export function HeroSection({ data }: HeroSectionProps) {
             className="w-72 md:w-[26rem] h-auto object-contain"
             priority
           />
-        </motion.div>
+          <span className="sr-only">Tüylüoğlu Yaşar İnşaat | İstanbul Dönüşüm ve İnşaat Projeleri</span>
+        </motion.h1>
 
         {/* CTA Button */}
         <motion.div

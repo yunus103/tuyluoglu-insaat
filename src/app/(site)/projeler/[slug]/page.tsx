@@ -9,7 +9,8 @@ import { buildMetadata } from "@/lib/seo";
 import { urlForImage } from "@/sanity/lib/image";
 import { RichText } from "@/components/ui/RichText";
 import { LightboxGallery } from "@/components/ui/Lightbox";
-import { JsonLd, projectJsonLd } from "@/components/seo/JsonLd";
+import { JsonLd, projectJsonLd, breadcrumbJsonLd } from "@/components/seo/JsonLd";
+import { getSiteUrl } from "@/lib/utils";
 import { SanityImage } from "@/components/ui/SanityImage";
 import { RiArrowLeftLine, RiArrowRightLine, RiMapPin2Line, RiCalendarLine, RiLayoutGridLine, RiCheckboxCircleLine } from "react-icons/ri";
 
@@ -44,9 +45,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const project = await getClient().fetch(projectBySlugQuery, { slug }, { next: { tags: ["projects"] } });
   if (!project) return {};
+
+  const locationText = project.location ? ` ${project.location}` : " İstanbul Kadıköy";
+  const defaultDesc = `${project.title} projesi; Tüylüoğlu İnşaat kalitesiyle${locationText} bölgesinde hayata geçirilen lüks konut ve kentsel dönüşüm projesi detayları.`;
+
   return buildMetadata({
     title: project.title,
-    description: project.title, // Fallback for meta description
+    description: defaultDesc,
     canonicalPath: `/projeler/${slug}`,
     pageSeo: project.seo,
   });
@@ -74,10 +79,17 @@ export default async function ProjectDetailPage({ params }: Props) {
   }
 
   const catLabel = project.category ? (CATEGORY_LABELS[project.category] ?? project.category) : null;
+  const siteBase = getSiteUrl();
 
   return (
     <>
       <JsonLd data={projectJsonLd(layoutData?.settings, project)} />
+      <JsonLd
+        data={breadcrumbJsonLd(siteBase, [
+          { name: "Projeler", href: "/projeler" },
+          { name: project.title, href: `/projeler/${slug}` },
+        ])}
+      />
 
       {/* ── Hero — Full viewport görsel ─────────────────────────── */}
       <section className="relative h-[55vh] md:h-[70vh] bg-[var(--color-black)] overflow-hidden">

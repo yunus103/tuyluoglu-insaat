@@ -7,7 +7,8 @@ import { buildMetadata } from "@/lib/seo";
 import { urlForImage } from "@/sanity/lib/image";
 import { PageHero } from "@/components/ui/PageHero";
 import { RichText } from "@/components/ui/RichText";
-import { JsonLd, aboutPageJsonLd } from "@/components/seo/JsonLd";
+import { JsonLd, aboutPageJsonLd, breadcrumbJsonLd } from "@/components/seo/JsonLd";
+import { getSiteUrl } from "@/lib/utils";
 import { RiArrowRightLine, RiCheckLine } from "react-icons/ri";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -51,9 +52,16 @@ export default async function AboutPage() {
   const team   = data?.teamMembers?.length ? data.teamMembers : FALLBACK_TEAM;
 
 
+  const siteBase = getSiteUrl();
+
   return (
     <>
       <JsonLd data={aboutPageJsonLd(layoutData?.settings)} />
+      <JsonLd
+        data={breadcrumbJsonLd(siteBase, [
+          { name: "Hakkımızda", href: "/hakkimizda" },
+        ])}
+      />
 
       {/* ── PageHero ──────────────────────────────────────────────── */}
       <PageHero

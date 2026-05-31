@@ -4,6 +4,8 @@ import { projectsPageQuery, projectListQuery } from "@/sanity/lib/queries";
 import { buildMetadata } from "@/lib/seo";
 import { PageHero } from "@/components/ui/PageHero";
 import { ProjectsGrid } from "@/components/projects/ProjectsGrid";
+import { JsonLd, breadcrumbJsonLd } from "@/components/seo/JsonLd";
+import { getSiteUrl } from "@/lib/utils";
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await client.fetch(projectsPageQuery, {}, { next: { tags: ["projectsPage"] } });
@@ -29,8 +31,15 @@ export default async function ProjectsListPage() {
   const remainingProjects = allProjects.filter((p: any) => !orderedIds.has(p._id));
   const finalProjects = [...orderedProjects, ...remainingProjects];
 
+  const siteBase = getSiteUrl();
+
   return (
     <>
+      <JsonLd
+        data={breadcrumbJsonLd(siteBase, [
+          { name: "Projeler", href: "/projeler" },
+        ])}
+      />
       {/* ── PageHero ──────────────────────────────────────────────── */}
       <PageHero
         eyebrow="Portfolio"

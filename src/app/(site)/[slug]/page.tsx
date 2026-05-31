@@ -6,8 +6,8 @@ import { blogPostBySlugQuery, blogListQuery, blogRelatedPostsQuery, sidebarProje
 import { buildMetadata } from "@/lib/seo";
 import { RichText } from "@/components/ui/RichText";
 import { SanityImage } from "@/components/ui/SanityImage";
-import { JsonLd, articleJsonLd } from "@/components/seo/JsonLd";
-import { formatDate } from "@/lib/utils";
+import { JsonLd, articleJsonLd, breadcrumbJsonLd } from "@/components/seo/JsonLd";
+import { formatDate, getSiteUrl } from "@/lib/utils";
 import Link from "next/link";
 import { RiArrowRightLine } from "react-icons/ri";
 
@@ -70,9 +70,17 @@ export default async function BlogPostPage({ params }: Props) {
     );
   }
 
+  const siteBase = getSiteUrl();
+
   return (
     <>
       <JsonLd data={articleJsonLd(post)} />
+      <JsonLd
+        data={breadcrumbJsonLd(siteBase, [
+          { name: "Blog", href: "/blog" },
+          { name: post.title, href: `/${slug}` },
+        ])}
+      />
 
       {/* ── Hero görseli ──────────────────────────────────────────── */}
       {post.mainImage && (

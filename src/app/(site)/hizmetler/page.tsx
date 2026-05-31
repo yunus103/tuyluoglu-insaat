@@ -6,7 +6,8 @@ import { servicesPageQuery, serviceListQuery, layoutQuery } from "@/sanity/lib/q
 import { buildMetadata } from "@/lib/seo";
 import { SanityImage } from "@/components/ui/SanityImage";
 import { PageHero } from "@/components/ui/PageHero";
-import { JsonLd, serviceListJsonLd } from "@/components/seo/JsonLd";
+import { JsonLd, serviceListJsonLd, breadcrumbJsonLd } from "@/components/seo/JsonLd";
+import { getSiteUrl } from "@/lib/utils";
 import { RiArrowRightLine } from "react-icons/ri";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -29,9 +30,16 @@ export default async function ServicesListPage() {
   const insaatServices   = (services || []).filter((s: any) => s.serviceCategory === "insaat");
   const mimarlikServices = (services || []).filter((s: any) => s.serviceCategory === "mimarlik");
 
+  const siteBase = getSiteUrl();
+
   return (
     <>
       <JsonLd data={serviceListJsonLd(layoutData?.settings, services || [])} />
+      <JsonLd
+        data={breadcrumbJsonLd(siteBase, [
+          { name: "Hizmetler", href: "/hizmetler" },
+        ])}
+      />
 
       {/* ── PageHero ──────────────────────────────────────────────── */}
       <PageHero

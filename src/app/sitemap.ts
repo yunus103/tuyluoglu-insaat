@@ -18,25 +18,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const dynamicRoutes: MetadataRoute.Sitemap = [
     // Blog yazıları — /[slug] altında (ön ek yok)
-    ...(data?.blogPosts?.map((p: any) => ({
+    ...(data?.blogPosts?.map((p: { slug: string; _updatedAt: string }) => ({
       url: `${base}/${p.slug}`,
-      lastModified: new Date(p._updatedAt),
+      lastModified: p._updatedAt ? new Date(p._updatedAt) : new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.6,
     })) || []),
 
     // Proje detay sayfaları
-    ...(data?.projects?.map((p: any) => ({
+    ...(data?.projects?.map((p: { slug: string; _updatedAt: string }) => ({
       url: `${base}/projeler/${p.slug}`,
-      lastModified: new Date(p._updatedAt),
+      lastModified: p._updatedAt ? new Date(p._updatedAt) : new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })) || []),
 
     // Hizmet detay sayfaları
-    ...(data?.services?.map((s: any) => ({
+    ...(data?.services?.map((s: { slug: string; _updatedAt: string }) => ({
       url: `${base}/hizmetler/${s.slug}`,
-      lastModified: new Date(s._updatedAt),
+      lastModified: s._updatedAt ? new Date(s._updatedAt) : new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })) || []),

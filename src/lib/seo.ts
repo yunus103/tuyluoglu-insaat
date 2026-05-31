@@ -64,6 +64,7 @@ export async function buildMetadata(params: BuildMetadataParams = {}): Promise<M
     : undefined;
 
   return {
+    metadataBase: new URL(siteUrl),
     title,
     description,
     icons: {
