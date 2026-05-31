@@ -22,69 +22,78 @@ export function HeroSection({ data }: HeroSectionProps) {
   const ctaLabel = data?.heroCtaLabel || "Projelerimizi İnceleyin";
   const ctaLink  = data?.heroCtaLink  || "/projeler";
 
-  // Ensure muted autoplay on all browsers (especially iOS Safari)
+  // Ensure muted autoplay and handle race conditions/state buffering
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+
+    // Explicitly set muted and playsinline to satisfy browser policies
     video.muted = true;
-    video.play().catch(() => {/* autoplay blocked — poster stays visible */});
-  }, []);
+    video.playsInline = true;
+
+    // Safety Check 1: If the video is already ready to play (e.g. from cache or fast load)
+    if (video.readyState >= 3) {
+      setVideoReady(true);
+    }
+
+    // Safety Check 2: Attempt play, handle browser play promise
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          setVideoReady(true);
+        })
+        .catch((error) => {
+          console.warn("Autoplay was prevented by browser policies:", error);
+          // Autoplay blocked (e.g. Low Power Mode) — poster stays visible gracefully
+        });
+    }
+  }, [data?.heroVideoUrl]);
 
   return (
     <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
 
-      {/* ── Background: poster only (no video URL) ─────────────── */}
-      {data?.heroPosterImage && !data?.heroVideoUrl && (
-        <div className="absolute inset-0">
+      {/* ── Background Poster (Always rendered at z-0 as the base layer) ── */}
+      {data?.heroPosterImage && (
+        <div className="absolute inset-0 z-0">
           <SanityImage
             image={data.heroPosterImage}
             fill
             className="object-cover"
             priority
             sizes="100vw"
+            quality={65} // Optimized quality to speed up initial load
           />
         </div>
       )}
 
-      {/* ── Video element ──────────────────────────────────────── */}
+      {/* ── Video Element (Rendered at z-10 above the poster) ────────────── */}
       {data?.heroVideoUrl && (
         <video
           ref={videoRef}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${videoReady ? "opacity-100" : "opacity-0"}`}
+          className={`absolute inset-0 w-full h-full object-cover z-10 transition-opacity duration-700 ${
+            videoReady ? "opacity-100" : "opacity-0"
+          }`}
           autoPlay
           muted
           loop
           playsInline
           preload="auto"
-          /* poster attribute intentionally omitted — 
-             the <Image> overlay below handles it with responsive sizing,
-             avoiding a redundant full-size download */
           // @ts-expect-error — fetchPriority is valid HTML but not yet in React types
           fetchPriority="high"
+          onLoadedData={() => setVideoReady(true)}
           onCanPlay={() => setVideoReady(true)}
+          onPlay={() => setVideoReady(true)}
         >
           <source src={data.heroVideoUrl} type="video/mp4" />
         </video>
       )}
 
-      {/* ── Poster overlay while video buffers ─────────────────── */}
-      {data?.heroVideoUrl && data?.heroPosterImage && !videoReady && (
-        <div className="absolute inset-0">
-          <SanityImage
-            image={data.heroPosterImage}
-            fill
-            className="object-cover"
-            priority
-            sizes="100vw"
-          />
-        </div>
-      )}
+      {/* ── Overlay gradient (z-20) ───────────────────────── */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/45 to-black/65 z-20" />
 
-      {/* ── Overlay gradient ──────────────────────────────────── */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/45 to-black/65 z-10" />
-
-      {/* ── Center content ────────────────────────────────────── */}
-      <div className="relative z-20 flex flex-col items-center justify-center text-center px-6">
+      {/* ── Center content (z-30) ────────────────────────── */}
+      <div className="relative z-30 flex flex-col items-center justify-center text-center px-6">
         {/* Logo */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -117,12 +126,12 @@ export function HeroSection({ data }: HeroSectionProps) {
         </motion.div>
       </div>
 
-      {/* ── Scroll indicator ──────────────────────────────────── */}
+      {/* ── Scroll indicator (z-30) ──────────────────────── */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 0.8 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2"
       >
         <span className="text-white/40 text-[9px] tracking-[0.3em] uppercase">Kaydır</span>
         <motion.div
