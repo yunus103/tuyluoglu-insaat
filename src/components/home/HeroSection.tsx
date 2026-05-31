@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { ComponentProps, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { RiArrowDownLine } from "react-icons/ri";
 import { SanityImage } from "@/components/ui/SanityImage";
@@ -10,7 +10,7 @@ import { SanityImage } from "@/components/ui/SanityImage";
 interface HeroSectionProps {
   data: {
     heroVideoUrl?: string;
-    heroPosterImage?: any;
+    heroPosterImage?: ComponentProps<typeof SanityImage>["image"];
     heroCtaLabel?: string;
     heroCtaLink?: string;
   } | null;
@@ -33,7 +33,9 @@ export function HeroSection({ data }: HeroSectionProps) {
 
     // Safety Check 1: If the video is already ready to play (e.g. from cache or fast load)
     if (video.readyState >= 3) {
-      setVideoReady(true);
+      requestAnimationFrame(() => {
+        setVideoReady(true);
+      });
     }
 
     // Safety Check 2: Attempt play, handle browser play promise
