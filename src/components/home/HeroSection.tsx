@@ -101,6 +101,7 @@ export function HeroSection({ data }: HeroSectionProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: "easeOut" }}
+          style={{ opacity: 0 }}
           className="mb-10"
         >
           <Image
@@ -118,6 +119,7 @@ export function HeroSection({ data }: HeroSectionProps) {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.3, ease: "easeOut" }}
+          style={{ opacity: 0 }}
         >
           <Link
             href={ctaLink}
@@ -133,6 +135,7 @@ export function HeroSection({ data }: HeroSectionProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 0.8 }}
+        style={{ opacity: 0 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2"
       >
         <span className="text-white/40 text-[9px] tracking-[0.3em] uppercase">Kaydır</span>
