@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { turkishSlugify } from "../../lib/slugify";
 
 /**
  * İnşaat/mimarlık sektöründe yaygın kullanılan proje kategorileri.
@@ -34,7 +35,10 @@ export const projectType = defineType({
       name: "slug",
       title: "Slug",
       type: "slug",
-      options: { source: "title" },
+      options: { 
+        source: "title",
+        slugify: turkishSlugify
+      },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
