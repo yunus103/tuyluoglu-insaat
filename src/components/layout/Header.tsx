@@ -38,6 +38,7 @@ export function Header({ settings, navigation }: { settings: any; navigation: an
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDrawerOpen(false);
   }, [pathname]);
 

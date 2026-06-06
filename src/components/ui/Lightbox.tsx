@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SanityImage } from "@/components/ui/SanityImage";
 import { Expand, X, ChevronLeft, ChevronRight } from "lucide-react";
@@ -39,6 +39,15 @@ export function LightboxGallery({ images }: LightboxGalleryProps) {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
   const [direction, setDirection] = useState(0);
 
+  const paginate = useCallback((newDirection: number) => {
+    setDirection(newDirection);
+    setSelectedImage((prev) => {
+      if (prev === null) return 0;
+      if (newDirection === 1) return prev < images.length - 1 ? prev + 1 : 0;
+      return prev > 0 ? prev - 1 : images.length - 1;
+    });
+  }, [images.length]);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (selectedImage === null) return;
@@ -48,16 +57,7 @@ export function LightboxGallery({ images }: LightboxGalleryProps) {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedImage, images.length]);
-
-  const paginate = (newDirection: number) => {
-    setDirection(newDirection);
-    setSelectedImage((prev) => {
-      if (prev === null) return 0;
-      if (newDirection === 1) return prev < images.length - 1 ? prev + 1 : 0;
-      return prev > 0 ? prev - 1 : images.length - 1;
-    });
-  };
+  }, [selectedImage, paginate]);
 
   const variants = {
     enter: (direction: number) => ({

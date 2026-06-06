@@ -8,13 +8,13 @@ export function ColorInput(props: StringInputProps) {
   
   // React'in input kasmasını engellemek için rengi önce yerel (lokal) state'te tutuyoruz
   const [localValue, setLocalValue] = useState(value || "#000000");
+  const [prevValue, setPrevValue] = useState(value);
 
-  // Dışarıdan veri gelirse lokal state'i eşitle
-  useEffect(() => {
-    if (value && value !== localValue) {
-      setLocalValue(value);
-    }
-  }, [value]);
+  // Dışarıdan veri gelirse lokal state'i eşitle (React docs style rendering-time state adjustment)
+  if (value !== prevValue) {
+    setPrevValue(value);
+    setLocalValue(value || "#000000");
+  }
 
   // Kullanıcı rengi sürüklerken saniyede 100 kere Sanity'ye kaydetmeye çalışmasını engelliyoruz (Debounce)
   useEffect(() => {

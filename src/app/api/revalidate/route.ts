@@ -55,7 +55,6 @@ export async function POST(req: Request) {
 
     tags.forEach((tag) => {
       // Revalidate target tags using the user's exact parameters that worked previously
-      // @ts-ignore
       revalidateTag(tag, { expire: 0 });
       console.log(`Revalidated tag: ${tag}`);
     });
@@ -63,7 +62,6 @@ export async function POST(req: Request) {
     // For specific document updates based on slug
     if (_type && slug?.current) {
       const itemTag = `${_type}:${slug.current}`;
-      // @ts-ignore
       revalidateTag(itemTag, { expire: 0 });
       console.log(`Revalidated tag: ${itemTag}`);
     }

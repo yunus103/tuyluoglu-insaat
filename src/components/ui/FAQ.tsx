@@ -18,13 +18,17 @@ export function FAQ({ items, className = "" }: { items: FAQItem[]; className?: s
       {items.map((item, index) => {
         const isOpen = activeIndex === index;
         return (
-          <div key={index}>
-            <button
-              onClick={() => setActiveIndex(isOpen ? null : index)}
-              className="flex w-full items-start justify-between py-5 text-left gap-4 group cursor-pointer"
-              aria-expanded={isOpen}
-              aria-controls={`faq-answer-${index}`}
-              id={`faq-question-${index}`}
+          <details
+            key={index}
+            open={isOpen}
+            className="group"
+          >
+            <summary
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveIndex(isOpen ? null : index);
+              }}
+              className="flex w-full items-start justify-between py-5 text-left gap-4 group cursor-pointer list-none [&::-webkit-details-marker]:hidden"
             >
               <span
                 className="font-heading text-[var(--color-black)] text-lg leading-snug group-hover:text-[var(--color-accent-dark)] transition-colors duration-200"
@@ -40,20 +44,14 @@ export function FAQ({ items, className = "" }: { items: FAQItem[]; className?: s
               >
                 {isOpen ? <RiSubtractLine size={14} /> : <RiAddLine size={14} />}
               </span>
-            </button>
+            </summary>
 
-            <div
-              id={`faq-answer-${index}`}
-              role="region"
-              aria-labelledby={`faq-question-${index}`}
-              hidden={!isOpen}
-              className="pb-6"
-            >
+            <div className="pb-6">
               <p className="text-[var(--color-gray)] leading-relaxed text-base border-l-2 border-[var(--color-accent)] pl-5">
                 {item.answer}
               </p>
             </div>
-          </div>
+          </details>
         );
       })}
     </div>

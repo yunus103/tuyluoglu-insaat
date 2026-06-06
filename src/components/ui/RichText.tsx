@@ -81,7 +81,7 @@ const components: PortableTextComponents = {
   },
 };
 
-export function RichText({ value, className = "" }: { value: any[]; className?: string }) {
+export function RichText({ value, className = "" }: { value: React.ComponentProps<typeof PortableText>["value"]; className?: string }) {
   if (!value) return null;
   return (
     <div className={`prose prose-lg max-w-none dark:prose-invert break-words flow-root ${className}`}>

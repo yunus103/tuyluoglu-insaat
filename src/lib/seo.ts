@@ -4,10 +4,17 @@ import { defaultSeoQuery } from "@/sanity/lib/queries";
 import { urlForImage } from "@/sanity/lib/image";
 import { getSiteUrl } from "./utils";
 
+type OgImageType = {
+  asset?: {
+    _ref?: string;
+    _id?: string;
+  };
+};
+
 type PageSeo = {
   metaTitle?: string;
   metaDescription?: string;
-  ogImage?: any;
+  ogImage?: OgImageType;
   canonicalUrl?: string;
   noIndex?: boolean;
 };
@@ -15,7 +22,7 @@ type PageSeo = {
 type BuildMetadataParams = {
   title?: string;
   description?: string;
-  ogImage?: any;
+  ogImage?: OgImageType;
   canonicalPath?: string;
   noIndex?: boolean;
   pageSeo?: PageSeo;

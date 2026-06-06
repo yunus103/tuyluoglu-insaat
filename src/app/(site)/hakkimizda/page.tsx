@@ -116,10 +116,7 @@ export default async function AboutPage() {
                   </div>
                 ) : (
                   <p className="text-[var(--color-gray)] leading-relaxed text-base">
-                    Tüylüoğlu İnşaat, 1985 yılında temelleri atılan ve bugün dört on yıla yayılan
-                    deneyimiyle Türkiye'nin önde gelen inşaat ve mimarlık firmalarından biridir.
-                    Konut, ticari yapılar ve kentsel dönüşüm projelerinde gösterdiğimiz özenle
-                    binlerce aileye güvenli ve estetik mekanlar sunduk.
+                    {"Tüylüoğlu İnşaat, 1985 yılında temelleri atılan ve bugün dört on yıla yayılan deneyimiyle Türkiye'nin önde gelen inşaat ve mimarlık firmalarından biridir. Konut, ticari yapılar ve kentsel dönüşüm projelerinde gösterdiğimiz özenle binlerce aileye güvenli ve estetik mekanlar sunduk."}
                   </p>
                 )}
               </div>

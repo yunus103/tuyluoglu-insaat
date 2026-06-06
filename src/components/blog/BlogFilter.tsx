@@ -21,6 +21,7 @@ export function BlogFilter({ posts, categories }: BlogFilterProps) {
     const urlParams = new URLSearchParams(window.location.search);
     const categoryQuery = urlParams.get("category");
     if (categoryQuery) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentCategory(categoryQuery);
     }
   }, []);

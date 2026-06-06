@@ -3,11 +3,12 @@ import { client } from "./client";
 
 const builder = createImageUrlBuilder(client);
 
-export function urlForImage(source: any) {
+export function urlForImage(source: { asset?: { _ref?: string; _id?: string } } | null | undefined) {
   if (!source?.asset) return null;
-  return builder.image(source);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return builder.image(source as any);
 }
 
-export function getImageLqip(image: any): string | undefined {
+export function getImageLqip(image: { asset?: { metadata?: { lqip?: string } } } | null | undefined): string | undefined {
   return image?.asset?.metadata?.lqip;
 }

@@ -5,7 +5,13 @@ import { urlForImage, getImageLqip } from "@/sanity/lib/image";
 
 type SanityImageProps = {
   image: {
-    asset: any;
+    asset: {
+      _ref?: string;
+      _id?: string;
+      metadata?: {
+        lqip?: string;
+      };
+    };
     alt?: string;
     hotspot?: { x: number; y: number };
     crop?: { top: number; bottom: number; left: number; right: number };
