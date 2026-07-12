@@ -1,6 +1,3 @@
-"use client";
-
-import { useState } from "react";
 import { RiAddLine, RiSubtractLine } from "react-icons/ri";
 
 type FAQItem = {
@@ -9,25 +6,18 @@ type FAQItem = {
 };
 
 export function FAQ({ items, className = "" }: { items: FAQItem[]; className?: string }) {
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
-
   if (!items || items.length === 0) return null;
 
   return (
     <div className={`divide-y divide-[var(--color-border)] ${className}`}>
       {items.map((item, index) => {
-        const isOpen = activeIndex === index;
         return (
           <details
             key={index}
-            open={isOpen}
+            name="faq-accordion"
             className="group"
           >
             <summary
-              onClick={(e) => {
-                e.preventDefault();
-                setActiveIndex(isOpen ? null : index);
-              }}
               className="flex w-full items-start justify-between py-5 text-left gap-4 group cursor-pointer list-none [&::-webkit-details-marker]:hidden"
             >
               <span
@@ -36,13 +26,10 @@ export function FAQ({ items, className = "" }: { items: FAQItem[]; className?: s
                 {item.question}
               </span>
               <span
-                className={`shrink-0 w-7 h-7 flex items-center justify-center border transition-colors duration-200 mt-0.5 ${
-                  isOpen
-                    ? "bg-[var(--color-accent)] border-[var(--color-accent)] text-white"
-                    : "bg-transparent border-[var(--color-border)] text-[var(--color-muted)] group-hover:border-[var(--color-accent)] group-hover:text-[var(--color-accent)]"
-                }`}
+                className="shrink-0 w-7 h-7 flex items-center justify-center border transition-colors duration-200 mt-0.5 bg-transparent border-[var(--color-border)] text-[var(--color-muted)] group-hover:border-[var(--color-accent)] group-hover:text-[var(--color-accent)] group-open:bg-[var(--color-accent)] group-open:border-[var(--color-accent)] group-open:text-white"
               >
-                {isOpen ? <RiSubtractLine size={14} /> : <RiAddLine size={14} />}
+                <RiAddLine size={14} className="group-open:hidden" />
+                <RiSubtractLine size={14} className="hidden group-open:block" />
               </span>
             </summary>
 
@@ -57,3 +44,4 @@ export function FAQ({ items, className = "" }: { items: FAQItem[]; className?: s
     </div>
   );
 }
+
