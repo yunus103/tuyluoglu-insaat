@@ -44,6 +44,13 @@ export const homePageQuery = groq`*[_type == "homePage"][0] {
   whyUsTitle,
   whyUsItems[] { title, description },
 
+  // Referanslar
+  referencesTitle,
+  references[] {
+    name,
+    logo { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
+  },
+
   // Projeler
   projectsTitle,
 

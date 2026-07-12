@@ -7,8 +7,9 @@ export const homePageType = defineType({
   groups: [
     { name: "hero", title: "Hero" },
     { name: "about", title: "Hakkımızda" },
-    { name: "services", title: "Hizmetler" },
     { name: "whyUs", title: "Neden Biz" },
+    { name: "references", title: "Referanslar" },
+    { name: "services", title: "Hizmetler" },
     { name: "projects", title: "Projeler" },
     { name: "cta", title: "Alt Banner (CTA)" },
     { name: "seo", title: "SEO" },
@@ -160,6 +161,47 @@ export const homePageType = defineType({
         { title: "Kalite", description: "Her projede en yüksek kalite standartlarını ve malzeme seçimini uyguluyoruz." },
         { title: "Güven", description: "Zamanında teslimat ve şeffaf iletişim politikamızla müşteri memnuniyetini ön planda tutuyoruz." },
         { title: "Uzmanlık", description: "İnşaat ve mimarlık alanında uzman kadromuzla projelerin her aşamasını titizlikle yönetiyoruz." },
+      ],
+    }),
+
+    // ─── Referanslar Section ────────────────────────────────────
+    defineField({
+      name: "referencesTitle",
+      title: "Referanslar Bölüm Başlığı",
+      type: "string",
+      group: "references",
+      initialValue: "Referanslarımız",
+    }),
+    defineField({
+      name: "references",
+      title: "Referans Markalar",
+      type: "array",
+      group: "references",
+      of: [
+        {
+          type: "object",
+          name: "referenceItem",
+          title: "Referans Marka",
+          fields: [
+            defineField({ name: "name", title: "Marka/Kurum Adı", type: "string" }),
+            defineField({
+              name: "logo",
+              title: "Marka Logosu",
+              type: "image",
+              options: { hotspot: true },
+              fields: [
+                defineField({ name: "alt", title: "Alt Metni", type: "string" }),
+              ],
+              description: "Tercihen şeffaf arka planlı (PNG veya SVG) logo yükleyin.",
+            }),
+          ],
+          preview: {
+            select: {
+              title: "name",
+              media: "logo",
+            },
+          },
+        },
       ],
     }),
 

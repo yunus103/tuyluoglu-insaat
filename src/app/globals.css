@@ -265,3 +265,9 @@
     opacity: 0.3;
   }
 }
+
+/* ─── Infinite Marquee Animation ─────────────────────────── */
+@keyframes marquee-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-33.333%); }
+}
