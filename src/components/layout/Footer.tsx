@@ -144,9 +144,16 @@ export function Footer({ settings, navigation }: { settings: any; navigation: an
           <p className="text-xs text-white/25">
             © {year} {settings?.siteName || "Tüylüoğlu İnşaat"}. Tüm hakları saklıdır.
           </p>
-          {/* Tasarım & geliştirme linki buraya eklenecek */}
-          <p className="text-xs text-white/20">
-            Tasarım &amp; Geliştirme
+          <p className="text-xs text-white/30">
+            Tasarım ve Geliştirme:{" "}
+            <a
+              href="https://yaytechstudio.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/50 hover:text-white transition-colors duration-200"
+            >
+              Yaytech Studio
+            </a>
           </p>
         </div>
       </div>
